@@ -74,3 +74,15 @@ def eliminarEmpleado(id):
         con.desconectar()
     except Exception as e:
         print(e)
+
+def verificarEmpleado(id):
+    try:
+        con = Conexion(host, user, password, db)
+        sql = f"SELECT COUNT(*) FROM EMPLEADO WHERE id = {id}"
+        cursor = con.ejecuta_query(sql)
+        resultado = cursor.fetchone()
+        con.desconectar()
+        return resultado[0] > 0
+    except Exception as e:
+        con.rollback()
+        print(e)

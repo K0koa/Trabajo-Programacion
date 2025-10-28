@@ -8,7 +8,7 @@ db = 'ecotech solutions'
 def registrarEmpleado(e):
     try:
         con = Conexion(host, user, password,db)
-        sql = f"INSERT INTO EMPLEADO SET id = {e.id}, nombre = '{e.nombre}', apellido = '{e.apellido}', correo = '{e.correo}', telefono = '{e.telefono}', FechaContrato = '{e.FechaContrato}', salario = {e.salario}"
+        sql = f"INSERT INTO empleado SET id = {e.id}, nombre = '{e.nombre}', apellido = '{e.apellido}', correo = '{e.correo}', telefono = '{e.telefono}', FechaContrato = '{e.FechaContrato}', salario = {e.salario}"
         con.ejecuta_query(sql)
         con.commit()
         input("\n\n Datos ingresados Satisfactoriamente")
@@ -19,7 +19,7 @@ def registrarEmpleado(e):
 def mostrarEmpleado():
     try:
         con = Conexion(host, user, password, db)
-        sql = "SELECT * FROM EMPLEADO"
+        sql = "SELECT * FROM empleado"
         cursor = con.ejecuta_query(sql)
         datos = cursor.fetchall()
         con.desconectar()
@@ -31,7 +31,7 @@ def mostrarEmpleado():
 def buscarEmpleado(id):
     try:
         con = Conexion(host, user, password, db)
-        sql = f"SELECT * FROM EMPLEADO WHERE id = {id}"
+        sql = f"SELECT * FROM empleado WHERE id = {id}"
         cursor = con.ejecuta_query(sql)
         datos = cursor.fetchone()
         con.desconectar()
@@ -43,7 +43,7 @@ def buscarEmpleado(id):
 def cosultaparcialEmpleado(cant):
     try:
         con = Conexion(host, user, password, db)
-        sql = f"SELECT * FROM EMPLEADO"
+        sql = f"SELECT * FROM empleado"
         cursor = con.ejecuta_query(sql)
         datos = cursor.fetchmany(size = cant)
         con.desconectar()
@@ -56,7 +56,7 @@ def cosultaparcialEmpleado(cant):
 def modificarEmpleado(e):
     try:
         con = Conexion(host, user,password,db)
-        sql = f"UPDATE EMPLEADO SET nombre = '{e.nombre}', apellido = '{e.apellido}', correo = '{e.correo}', telefono = '{e.telefono}', FechaContrato = '{e.FechaContrato}', salario = {e.salario} WHERE id = {e.id}"
+        sql = f"UPDATE empleado SET nombre = '{e.nombre}', apellido = '{e.apellido}', correo = '{e.correo}', telefono = '{e.telefono}', FechaContrato = '{e.FechaContrato}', salario = {e.salario} WHERE id = {e.id}"
         con.ejecuta_query(sql)
         con.commit()
         input("\n\n Datos modificados correctamente")
@@ -67,10 +67,10 @@ def modificarEmpleado(e):
 def eliminarEmpleado(id):
     try:
         con = Conexion(host, user, password, db)
-        sql = "DELETE FROM EMPLEADO WHERE id={}".format(id)
+        sql = "DELETE FROM empleado WHERE id={}".format(id)
         con.ejecuta_query(sql)
         con.commit()
-        input("\n\n Empleado Eliminado Satisfactoriamente ")
+        input("\n\n empleado Eliminado Satisfactoriamente ")
         con.desconectar()
     except Exception as e:
         print(e)
@@ -78,7 +78,7 @@ def eliminarEmpleado(id):
 def verificarEmpleado(id):
     try:
         con = Conexion(host, user, password, db)
-        sql = f"SELECT COUNT(*) FROM EMPLEADO WHERE id = {id}"
+        sql = f"SELECT COUNT(*) FROM empleado WHERE id = {id}"
         cursor = con.ejecuta_query(sql)
         resultado = cursor.fetchone()
         con.desconectar()

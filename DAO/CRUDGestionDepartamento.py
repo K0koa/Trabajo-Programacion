@@ -3,12 +3,12 @@ from DAO.Conexion import Conexion
 host = 'localhost'
 user = 'ecosolutions'
 password = '3k0Z0iuTloNz'
-db = 'ecotech solutions'
+db = 'ecotech'
 
-def registrarDepartamento(d):
+def agregar(d):
     try:
         con = Conexion(host, user, password, db)
-        sql = f"INSERT INTO DEPARTAMENTO SET id = {d.id}, nombre = '{d.nombre}', gerente = '{d.gerente}'"
+        sql = f"INSERT INTO departamento SET id = {d.id}, nombre = '{d.nombre}', gerente = '{d.gerente}'"
         con.ejecuta_query(sql)
         con.commit()
         input("\n\n Datos ingresados Satisfactoriamente")
@@ -16,10 +16,10 @@ def registrarDepartamento(d):
     except Exception as e:
         print(e)
 
-def mostrarDepartamento(): 
+def mostrarTodo(): 
     try:
         con = Conexion(host, user, password, db)
-        sql = "SELECT * FROM DEPARTAMENTO"
+        sql = "SELECT * FROM departamento"
         cursor = con.ejecuta_query(sql)
         datos = cursor.fetchall()
         con.desconectar()
@@ -31,7 +31,7 @@ def mostrarDepartamento():
 def buscarDepartamento(id):
     try:
         con = Conexion(host, user, password, db)
-        sql = f"SELECT * FROM DEPARTAMENTO WHERE id = {id}"
+        sql = f"SELECT * FROM departamento WHERE id = {id}"
         cursor = con.ejecuta_query(sql)
         datos = cursor.fetchone()
         con.desconectar()
@@ -43,7 +43,7 @@ def buscarDepartamento(id):
 def cosultaparcialDepartamento(cant):
     try:
         con = Conexion(host, user, password, db)
-        sql = f"SELECT * FROM DEPARTAMENTO"
+        sql = f"SELECT * FROM departamento"
         cursor = con.ejecuta_query(sql)
         datos = cursor.fetchmany(size = cant)
         con.desconectar()
@@ -52,10 +52,10 @@ def cosultaparcialDepartamento(cant):
         con.rollback()
         print(e)
 
-def modificarDepartamento(d):
+def editar(d):
     try:
         con = Conexion(host, user, password, db)
-        sql = f"UPDATE DEPARTAMENTO SET nombre = '{d.nombre}', gerente = '{d.gerente}' WHERE id = {d.id}"
+        sql = f"UPDATE departamento SET nombre = '{d.nombre}', gerente = '{d.gerente}' WHERE id = {d.id}"
         con.ejecuta_query(sql)
         con.commit()
         input("\n\n Datos modificados Satisfactoriamente")
@@ -63,10 +63,10 @@ def modificarDepartamento(d):
     except Exception as e:
         print(e)
 
-def eliminarDepartamento(id):
+def eliminar(id):
     try:
         con = Conexion(host, user, password, db)
-        sql = f"DELETE FROM DEPARTAMENTO WHERE id = {id}"
+        sql = f"DELETE FROM departamento WHERE id = {id}"
         con.ejecuta_query(sql)
         con.commit()
         input("\n\n Datos elimados Satisfactoriamente")
@@ -77,7 +77,7 @@ def eliminarDepartamento(id):
 def verificarDepartamento(id):
     try:
         con = Conexion(host, user, password, db)
-        sql = f"SELECT COUNT(*) FROM DEPARTAMENTO WHERE id = {id}"
+        sql = f"SELECT COUNT(*) FROM departamento WHERE id = {id}"
         cursor = con.ejecuta_query(sql)
         datos = cursor.fetchone()
         con.desconectar()

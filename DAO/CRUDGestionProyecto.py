@@ -8,7 +8,7 @@ db = 'ecotech solutions'
 def registrarProyecto(p):
     try:
         con = Conexion(host, user, password, db)
-        sql = f"INSERT INTO PROYECTO SET id = {p.id}, nombre  = '{p.nombre}', descripcion  = '{p.descripcion}', FechaInicio = '{p.fechaInicio}'"
+        sql = f"INSERT INTO proyecto SET id = {p.id}, nombre  = '{p.nombre}', descripcion  = '{p.descripcion}', FechaInicio = '{p.fechaInicio}'"
         con.ejecuta_query(sql)
         con.commit()
         input("\n\n Datos ingresados Satisfactoriamente")
@@ -19,7 +19,7 @@ def registrarProyecto(p):
 def mostrarProyecto(): 
     try:
         con = Conexion(host, user, password, db)
-        sql = "SELECT * FROM PROYECTO"
+        sql = "SELECT * FROM proyecto"
         cursor = con.ejecuta_query(sql)
         datos = cursor.fetchall()
         con.desconectar()
@@ -30,7 +30,7 @@ def mostrarProyecto():
 def buscarProyecto(id):
     try:
         con = Conexion(host, user, password, db)
-        sql = f"SELECT * FROM PROYECTO WHERE id = {id}"
+        sql = f"SELECT * FROM proyecto WHERE id = {id}"
         cursor = con.ejecuta_query(sql)
         datos = cursor.fetchone()
         con.desconectar()
@@ -41,7 +41,7 @@ def buscarProyecto(id):
 def cosultaparcialProyecto(cant):
     try:
         con = Conexion(host, user, password, db)
-        sql = f"SELECT * FROM PROYECTO"
+        sql = f"SELECT * FROM proyecto"
         cursor = con.ejecuta_query(sql)
         datos = cursor.fetchmany(size = cant)
         con.desconectar()
@@ -53,7 +53,7 @@ def cosultaparcialProyecto(cant):
 def modificarProyecto(p):
     try:
         con = Conexion(host, user,password,db)
-        sql = f"UPDATE PROYECTO SET nombre = '{p.nombre}', descripcion  = '{p.descripcion}', FechaInicio  = '{p.fechaInicio}' WHERE id = {p.id}" 
+        sql = f"UPDATE proyecto SET nombre = '{p.nombre}', descripcion  = '{p.descripcion}', FechaInicio  = '{p.fechaInicio}' WHERE id = {p.id}" 
         con.ejecuta_query(sql)
         con.commit()
         input("\n\n Datos modificados correctamente")
@@ -64,7 +64,7 @@ def modificarProyecto(p):
 def eliminarProyecto(id):
     try:
         con = Conexion(host, user, password, db)
-        sql = f"DELETE FROM PROYECTO WHERE id = {id}"
+        sql = f"DELETE FROM proyecto WHERE id = {id}"
         con.ejecuta_query(sql)
         con.commit()
         input("\n\n Datos eliminados Satisfactoriamente")
@@ -75,7 +75,7 @@ def eliminarProyecto(id):
 def verificarProyecto(id):
     try:
         con = Conexion(host, user, password, db)
-        sql = f"SELECT COUNT(*) FROM PROYECTO WHERE id = {id}"
+        sql = f"SELECT COUNT(*) FROM proyecto WHERE id = {id}"
         cursor = con.ejecuta_query(sql)
         datos = cursor.fetchone()
         con.desconectar()

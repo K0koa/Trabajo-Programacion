@@ -28,6 +28,7 @@ def menuPrincipal():
     print("  6. Generar Informe                      ")
     print("  7. Salir                                ")
     print("==========================================")
+<<<<<<< HEAD
     opm = input("Ingrese una opcion: ").strip()
     while True:
         if opm not in ['1','2','3','4','5','6','7']:
@@ -60,6 +61,8 @@ def menuPrincipal():
         menuInforme()
     elif opm == '7':
         return
+=======
+>>>>>>> 30b4954ae90717eee331200485bf8ffe4f88aa6b
 
 def menuEmpleado():
     try:
@@ -97,11 +100,19 @@ def menuEmpleado():
         elif op == '2':
             mostrarDatosEmpleado()
         elif op == '3':
+<<<<<<< HEAD
             mostrarDatoEmpleadoEspecifico()
         elif op == '4':
             modificarEmpleado()
         elif op == '5':
             eliminarEmpleado()
+=======
+            mostrarDatosEmpleadoEspecifico()
+        elif op == '4':
+            modificarDatosEmpleado()
+        elif op == '5':
+            eliminarDatosEmpleado()
+>>>>>>> 30b4954ae90717eee331200485bf8ffe4f88aa6b
         elif op == '6':
             return
     except Exception as e:
@@ -277,6 +288,7 @@ def menuAsignacion():
 def ingresarDatosEmpleado():
     try:
         print("=== Ingresar Datos Empleado ===")
+<<<<<<< HEAD
         run = input("Ingrese el run: ").strip()
         while True:
             if not run.isdigit():
@@ -285,11 +297,22 @@ def ingresarDatosEmpleado():
             else:
                 break
         
+=======
+        id = input("Ingrese el ID: ").strip()
+        while True:
+            if not GestionEmpleado.verificarEmpleado(id):
+                print("ID invalido")
+                id = input("Ingrese el ID: ").strip()
+            else:
+                break
+
+>>>>>>> 30b4954ae90717eee331200485bf8ffe4f88aa6b
         nombre = input("Ingrese el nombre: ").strip().upper()
         while True:
             if not nombre.isalpha():
                 print("Nombre invalido")
                 nombre = input("Ingrese el nombre: ").strip().upper()
+<<<<<<< HEAD
             else:
                 break
         
@@ -301,6 +324,19 @@ def ingresarDatosEmpleado():
             else:
                 break
 
+=======
+            else:
+                break
+
+        direccion = input("Ingrese la direccion: ").strip().upper()
+        while True:
+            if not direccion.isalpha():
+                print("Direccion invalida")
+                direccion = input("Ingrese la direccion: ").strip().upper()
+            else:
+                break
+
+>>>>>>> 30b4954ae90717eee331200485bf8ffe4f88aa6b
         telefono = input("Ingrese el telefono: ").strip()
         while True:
             if not telefono.isdigit():
@@ -308,7 +344,10 @@ def ingresarDatosEmpleado():
                 telefono = input("Ingrese el telefono: ").strip()
             else:
                 break
+<<<<<<< HEAD
         
+=======
+>>>>>>> 30b4954ae90717eee331200485bf8ffe4f88aa6b
         correo = input("Ingrese el correo: ").strip().lower()
         while True:
             if "@" not in correo or "." not in correo:
@@ -317,6 +356,7 @@ def ingresarDatosEmpleado():
             else:
                 break
 
+<<<<<<< HEAD
         fecha_inicio = input("Ingrese la fecha de contrato (dd-mm-aaaa): ").strip()
         while True:
             try:
@@ -348,6 +388,11 @@ def ingresarDatosEmpleado():
 
         empleado = Empleado(run, nombre, direccion, telefono, correo, fecha_inicio, salario, departamento_id)
         GestionEmpleado.agregar(empleado)
+=======
+        empleado = Empleado(id, nombre, direccion, telefono, correo)
+        GestionEmpleado.registrarEmpleado(empleado)
+        print("Empleado registrado con exito")
+>>>>>>> 30b4954ae90717eee331200485bf8ffe4f88aa6b
         input("Presione enter para continuar")
         return
     except Exception as e:
@@ -356,13 +401,18 @@ def ingresarDatosEmpleado():
 def mostrarDatosEmpleado():
     try:
         print("=== Mostrar Datos Empleado ===")
+<<<<<<< HEAD
         datos = GestionEmpleado.mostrarTodos()
         for d in datos:
             print(f"User_id: {d[0]} | Run: {d[1]} | Nombre: {d[2]} | Direccion: {d[3]} | Telefono: {d[4]} | Correo: {d[5]} | Fecha inicio: {d[6]} | Salario: {d[7]} | Dept: {d[8]}")
+=======
+        GestionEmpleado.mostrarEmpleado()
+>>>>>>> 30b4954ae90717eee331200485bf8ffe4f88aa6b
         input("Presione enter para continuar")
         return
     except Exception as e:
         print(e)
+<<<<<<< HEAD
 
 def mostrarDatoEmpleadoEspecifico():
     try:
@@ -502,14 +552,24 @@ def eliminarEmpleado():
         return
     except Exception as e:
         print(e)
+=======
+
+#------------------------------------------------------------------------------------------------
+
+#------------------------------------------------------------------------------------------------
+>>>>>>> 30b4954ae90717eee331200485bf8ffe4f88aa6b
 
 #------------------------------------------------------------------------------------------------
 
 #------------------------------------------------------------------------------------------------
 
+<<<<<<< HEAD
 #------------------------------------------------------------------------------------------------
 
 #------------------------------------------------------------------------------------------------
 
 os.system("cls")
 modificarEmpleado()
+=======
+mostrarDatosEmpleado()
+>>>>>>> 30b4954ae90717eee331200485bf8ffe4f88aa6b

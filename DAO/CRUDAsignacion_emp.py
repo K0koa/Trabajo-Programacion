@@ -3,7 +3,11 @@ from DAO.Conexion import Conexion
 host = 'localhost'
 user = 'ecosolutions'
 password = '3k0Z0iuTloNz'
+<<<<<<< HEAD
 db = 'ecotech'
+=======
+db = 'ecotech solutions'
+>>>>>>> 30b4954ae90717eee331200485bf8ffe4f88aa6b
 
 def asignar(empleado_id, proyecto_id, rol=None):
     try:

@@ -13,7 +13,7 @@ def agregar(e):
         params = (e.run, e.nombre, e.direccion, e.telefono, e.correo, e.fecha_inicio, e.salario, e.departamento_id)
         con.ejecuta_query(sql, params)
         con.commit()
-        input("\n\n Datos ingresados Satisfactoriamente")
+        print("\nDatos ingresados Satisfactoriamente")
         con.desconectar()
     except Exception as e:
         try:
@@ -77,7 +77,7 @@ def editar(e):
         params = (e.nombre, e.direccion, e.telefono, e.correo, e.fecha_inicio, e.salario, e.departamento_id, e.user_id)
         con.ejecuta_query(sql, params)
         con.commit()
-        input("\n\n Datos modificados correctamente")
+        print("\nDatos modificados correctamente")
         con.desconectar()
     except Exception as e:
         try:
@@ -105,7 +105,7 @@ def eliminar(id):
 def verificar(id):
     try:
         con = Conexion(host, user, password, db)
-        sql = "SELECT * FROM empleado WHERE id = %s"
+        sql = "SELECT * FROM empleado WHERE USER_ID = %s"
         cursor = con.ejecuta_query(sql, (id,))
         datos = cursor.fetchone()
         con.desconectar()

@@ -12,18 +12,6 @@ class Conexion:
         )
             
         self.cursor = self.db.cursor()
-
-    def __init__(self, host = 'localhost', user = 'ecosolutions', password = '3k0Z0iuTloNz', db = 'ecotech solutions'):
-        self.db = pymysql.connect(
-            host=host,
-            user=user,
-            password=password,
-            db=db,
-            charset= 'utf8mb4',
-            cursorclass=pymysql.cursors.Cursos
-        )
-            
-        self.cursor=self.db.cursor()
     
     def ejecuta_query(self, sql, params = None):
         if params:

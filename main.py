@@ -1,12 +1,15 @@
 # Importar sistema 
-import os, datetime
+import os
+from datetime import datetime
+import time
+import re
 
 # Carpeta DAO
 import DAO.CRUDGestionDepartamento as GestionDepartamento
 import DAO.CRUDGestionEmpleado as GestionEmpleado
 import DAO.CRUDGestionProyecto as GestionProyecto
 import DAO.CRUDGestionTiempo as GestionTiempo
-import DAO.CRUDAsignacion_emp as Asignacion
+import DAO.CRUDAsignacion_emp as Asignacion_emp
 
 # Carpeta DTO
 from DTO.Departamento import Departamento
@@ -16,7 +19,7 @@ from DTO.RegistroTiempo import RegistroTiempo
 
 # Funciones Menu
 def menuPrincipal():
-    os.system("cls")
+    os.system("clear")
     print("==========================================")
     print("        M E N U  P R I N C I P A L        ")
     print("==========================================")
@@ -28,42 +31,10 @@ def menuPrincipal():
     print("  6. Generar Informe                      ")
     print("  7. Salir                                ")
     print("==========================================")
-    opm = input("Ingrese una opcion: ").strip()
-    while True:
-        if opm not in ['1','2','3','4','5','6','7']:
-            os.system("cls")
-            print("==========================================")
-            print("        M E N U  P R I N C I P A L        ")
-            print("==========================================")
-            print("  1. Gestionar Empleado                   ")
-            print("  2. Gestionar Departamento               ")
-            print("  3. Gestionar Proyecto                   ")
-            print("  4. Registro de Tiempo                   ")
-            print("  5. Asignacion de Empleados a Proyectos  ")
-            print("  6. Generar Informe                      ")
-            print("  7. Salir                                ")
-            print("==========================================")
-            opm = input("Ingrese una opcion: ").strip()
-        else:
-            break
-    if opm == '1':
-        menuEmpleado()
-    elif opm == '2':
-        menuDepartamento()
-    elif opm == '3':
-        menuProyecto()
-    elif opm == '4':
-        menuTiempo()
-    elif opm == '5':
-        menuAsignacion()
-    elif opm == '6':
-        menuInforme()
-    elif opm == '7':
-        return
 
 def menuEmpleado():
     try:
-        os.system("cls")
+        os.system("clear")
         print("==========================================")
         print("         M E N U  E M P L E A D O         ")
         print("==========================================")
@@ -78,7 +49,7 @@ def menuEmpleado():
         op = input("Ingrese una opcion: ").strip()
         while True:
             if op not in ['1','2','3','4','5','6']:
-                os.system("cls")
+                os.system("clear")
                 print("==========================================")
                 print("         M E N U  E M P L E A D O         ")
                 print("==========================================")
@@ -109,31 +80,29 @@ def menuEmpleado():
 
 def menuDepartamento():
     try:
-        os.system("cls")
+        os.system("clear")
         print("==========================================")
-        print("       M E N U  D E P A R T A M E N T O   ")
+        print("     M E N U  D E P A R T A M E N T O     ")
         print("==========================================")
         print("  1. Ingresar Datos Departamento          ")
         print("  2. Mostrar Datos Departamento           ")
-        print("  3. Buscar Datos Departamento            ")
-        print("  4. Modificar Datos Departamento         ")
-        print("  5. Eliminar Datos Departamento          ")
-        print("  6. Salir                                ")
+        print("  3. Modificar Datos Departamento         ")
+        print("  4. Eliminar Datos Departamento          ")
+        print("  5. Salir                                ")
         print("==========================================")
 
         op = input("Ingrese una opcion: ").strip()
         while True:
             if op not in ['1','2','3','4','5','6']:
-                os.system("cls")
+                os.system("clear")
                 print("==========================================")
-                print("       M E N U  D E P A R T A M E N T O   ")
+                print("     M E N U  D E P A R T A M E N T O     ")
                 print("==========================================")
                 print("  1. Ingresar Datos Departamento          ")
                 print("  2. Mostrar Datos Departamento           ")
-                print("  3. Buscar Datos Departamento            ")
-                print("  4. Modificar Datos Departamento         ")
-                print("  5. Eliminar Datos Departamento          ")
-                print("  6. Salir                                ")
+                print("  3. Modificar Datos Departamento         ")
+                print("  4. Eliminar Datos Departamento          ")
+                print("  5. Salir                                ")
                 print("==========================================")
                 op = input("Ingrese una opcion: ").strip()
             else:
@@ -143,19 +112,17 @@ def menuDepartamento():
         elif op == '2':
             mostrarDatosDepartamento()
         elif op == '3':
-            mostrarDatosDepartamentoEspecifico()
-        elif op == '4':
             modificarDatosDepartamento()
-        elif op == '5':
+        elif op == '4':
             eliminarDatosDepartamento()
-        elif op == '6':
+        elif op == '5':
             return
     except Exception as e:
         print(e)
 
 def menuProyecto():
     try:
-        os.system("cls")
+        os.system("clear")
         print("==========================================")
         print("         M E N U  P R O Y E C T O         ")
         print("==========================================")
@@ -169,8 +136,8 @@ def menuProyecto():
 
         op = input("Ingrese una opcion: ").strip()
         while True:
-            if op not in ['1','2','3','4','5','6']:
-                os.system("cls")
+            if op not in ['1','2','3','4','5','6','7']:
+                os.system("clear")
                 print("==========================================")
                 print("         M E N U  P R O Y E C T O         ")
                 print("==========================================")
@@ -201,7 +168,7 @@ def menuProyecto():
 
 def menuRegistroTiempo():
     try:
-        os.system("cls")
+        os.system("clear")
         print("==========================================")
         print("         M E N U  R E G I S T R O         ")
         print("==========================================")
@@ -213,7 +180,7 @@ def menuRegistroTiempo():
         op = input("Ingrese una opcion: ").strip()
         while True:
             if op not in ['1','2','3']:
-                os.system("cls")
+                os.system("clear")
                 print("==========================================")
                 print("         M E N U  R E G I S T R O         ")
                 print("==========================================")
@@ -235,7 +202,7 @@ def menuRegistroTiempo():
 
 def menuAsignacion():
     try:
-        os.system("cls")
+        os.system("clear")
         print("==========================================")
         print("         M E N U  A S I G N A C I O N     ")
         print("==========================================")
@@ -248,7 +215,7 @@ def menuAsignacion():
         op = input("Ingrese una opcion: ").strip()
         while True:
             if op not in ['1','2','3','4']:
-                os.system("cls")
+                os.system("clear")
                 print("==========================================")
                 print("         M E N U  A S I G N A C I O N     ")
                 print("==========================================")
@@ -285,7 +252,7 @@ def ingresarDatosEmpleado():
             else:
                 break
         
-        nombre = input("Ingrese el nombre: ").strip().upper()
+        nombre = input("Ingrese el nombre: ").strip().capitalize()
         while True:
             if not nombre.isalpha():
                 print("Nombre invalido")
@@ -317,19 +284,17 @@ def ingresarDatosEmpleado():
             else:
                 break
 
-        fecha_inicio = input("Ingrese la fecha de contrato (dd-mm-aaaa): ").strip()
+        fecha_inicio = input("Ingrese la fecha de contrato (aaaa-mm-dd): ").strip()
         while True:
-            try:
-                fecha = datetime.datetime.strptime(fecha_inicio, "%d-%m-%Y")
-                if fecha > datetime.datetime.now():
-                    print("Fecha de contrato invalida")
-                    fecha_inicio = input("Ingrese la fecha de contrato (dd-mm-aaaa): ").strip()
-                else:
-                    break
-            except ValueError:
-                print("Fecha de contrato invalida")
-                fecha_inicio = input("Ingrese la fecha de contrato (dd-mm-aaaa): ").strip()
-
+            fecha = input("Ingrese la fecha de contrato (aaaa-mm-dd): ").strip()
+            if not fecha:
+                fecha = datetime.now().strftime("%Y-%m-%d")
+            elif not re.match(r'^\d{4}-\d{2}-\d{2}$', fecha):
+                print("Fecha de inicio invalida")
+                fecha = input("Ingrese la fecha de contrato (aaaa-mm-dd): ").strip()
+            else:
+                break
+                
         salario = input("Ingrese el salario: ").strip()
         while True:
             if not salario.isdigit():
@@ -338,10 +303,21 @@ def ingresarDatosEmpleado():
             else:
                 break
 
-        departamento_id = input("Ingrese el id del departamento: ").strip()
+        print("\n=== Departamento Disponibles ===")
+        datos = GestionDepartamento.mostrarTodo()
+        if not datos:
+            print("No hay departamentos disponibles")
+            input("Presione enter para continuar")
+            return
+        for d in datos:
+            print(f"Id: {d[0]} | Nombre: {d[1]}")
+        departamento_id = input("\nIngrese el id del departamento: ").strip()
         while True:
             if not departamento_id.isdigit():
                 print("Id de departamento invalido")
+                departamento_id = input("Ingrese el id del departamento: ").strip()
+            elif not GestionDepartamento.verificarDepartamento(departamento_id):
+                print("Departamento no encontrado")
                 departamento_id = input("Ingrese el id del departamento: ").strip()
             else:
                 break
@@ -357,8 +333,12 @@ def mostrarDatosEmpleado():
     try:
         print("=== Mostrar Datos Empleado ===")
         datos = GestionEmpleado.mostrarTodos()
+        if not datos:
+            print("No hay empleados para mostrar")
+            input("\nPresione enter para continuar")
+            return
         for d in datos:
-            print(f"User_id: {d[0]} | Run: {d[1]} | Nombre: {d[2]} | Direccion: {d[3]} | Telefono: {d[4]} | Correo: {d[5]} | Fecha inicio: {d[6]} | Salario: {d[7]} | Dept: {d[8]}")
+            print(f"User_id: {d[0]} | Run: {d[1]} | Nombre: {d[2]} | Direccion: {d[3]} | Telefono: {d[4]} | Correo: {d[5]} | Fecha inicio: {d[6]} | Salario: {d[7]} | Dept: {d[8]}\n----------------------------")
         input("Presione enter para continuar")
         return
     except Exception as e:
@@ -368,6 +348,10 @@ def mostrarDatoEmpleadoEspecifico():
     try:
         print("=== Mostrar Datos Empleado Especifico ===")
         EmpleadoData = GestionEmpleado.mostrarTodos()
+        if not EmpleadoData:
+            print("No hay empleados para mostrar")
+            input("\nPresione enter para continuar")
+            return
         for d in EmpleadoData:
             print(f"User_id: {d[0]} | Nombre : {d[2]}")
         ide = int(input("Ingrese el id del empleado: ").strip())
@@ -388,6 +372,11 @@ def mostrarDatoEmpleadoEspecifico():
 def mostrarDatoEmpleadoParcial():
     try:
         print("=== Mostrar Datos Empleado Parcial ===")
+        datos = GestionEmpleado.mostrarTodos()
+        if not datos:
+            print("No hay empleados para mostrar")
+            input("\nPresione enter para continuar")
+            return
         num = input("Ingrese la cantidad a mostrar: ").strip()
         while True:
             if not num.isdigit():
@@ -405,7 +394,7 @@ def mostrarDatoEmpleadoParcial():
 
 def modificarEmpleado():
     try:
-        os.system("cls")
+        os.system("clear")
         print("=== Modificar Datos Empleado ===")
         datosEmpleado = GestionEmpleado.mostrarTodos()
         if not datosEmpleado:
@@ -430,13 +419,61 @@ def modificarEmpleado():
         
         lst = [emp[0], emp[1], emp[2], emp[3], emp[4], emp[5], emp[6], emp[7], emp[8]]
 
-        nuevo_nombre = input(f"Nombre [{emp[2]}] (con Enter mantiene valores): ") or emp[2]
-        nuevo_direccion = input(f"Dirección [{emp[3]}] (con Enter mantiene valores): ") or emp[3]
-        nuevo_telefono = input(f"Teléfono [{emp[4]}] (con Enter mantiene valores): ") or emp[4]
-        nuevo_correo = input(f"Correo [{emp[5]}] (con Enter mantiene valores): ") or emp[5]
-        nuevo_fecha_inicio = input(f"Fecha inicio [{emp[6]}] (con Enter mantiene valores): ") or emp[6]
-        nuevo_salario = input(f"Salario [{emp[7]}] (con Enter mantiene valores): ") or str(emp[7])
-
+        nuevo_nombre = input(f"Nombre [{emp[2]}] (con Enter mantiene valores): ").strip().capitalize()
+        while True:
+            #verificamos si el nombre esta vacio
+            if not nuevo_nombre:
+                nuevo_nombre = emp[2]
+            #verificamos que el nombre solo contenga letras
+            elif not nuevo_nombre.isalpha():
+                print("Nombre invalido")
+                nuevo_nombre = input(f"Nombre [{emp[2]}] (con Enter mantiene valores): ").strip().upper()
+            else:
+                break
+        nuevo_direccion = input(f"Dirección [{emp[3]}] (con Enter mantiene valores): ").strip().capitalize()
+        while True:
+            #verificamos si la direccion esta vacia
+            if not nuevo_direccion:
+                nuevo_direccion = emp[3]
+            #verificamos que la direccion solo contenga letras
+            elif not nuevo_direccion.isalpha():
+                print("Direccion invalida")
+                nuevo_direccion = input(f"Dirección [{emp[3]}] (con Enter mantiene valores): ").strip().upper()
+            else:
+                break
+        nuevo_telefono = input(f"Teléfono [{emp[4]}] (con Enter mantiene valores): ").strip()
+        while True:
+            #verificamos si el telefono esta vacio
+            if not nuevo_telefono:
+                nuevo_telefono = emp[4]
+            #verificamos que el telefono solo contenga numeros
+            elif not str(nuevo_telefono).isdigit():
+                print("Telefono invalido")
+                nuevo_telefono = input(f"Teléfono [{emp[4]}] (con Enter mantiene valores): ").strip()
+            else:
+                break
+        nuevo_correo = input(f"Correo [{emp[5]}] (con Enter mantiene valores): ").strip()
+        while True:
+            #verificamos si el correo esta vacio
+            if not nuevo_correo:
+                nuevo_correo = emp[5]
+            #verificamos que el correo sea valido
+            elif not '@' in nuevo_correo or '.' not in nuevo_correo:
+                print("Correo invalido")
+                nuevo_correo = input(f"Correo [{emp[5]}] (con Enter mantiene valores): ").strip()
+            else:
+                break
+        nuevo_fecha_inicio = input(f"Fecha inicio [{emp[6]}] (con Enter mantiene valores): ").strip() 
+        while True:
+            if not nuevo_fecha_inicio:
+                nuevo_fecha_inicio = str(emp[6])
+            try:
+                datetime.strptime(nuevo_fecha_inicio, '%Y-%m-%d')
+                break
+            except (ValueError, AssertionError):
+                print("Fecha invalida")
+                nuevo_fecha_inicio = input(f"Fecha inicio [{emp[6]}] (con Enter mantiene valores): ").strip()
+        nuevo_salario = input(f"Salario [{emp[7]}] (con Enter mantiene valores): ").strip() or str(emp[7])
         datosDepartamento = GestionDepartamento.mostrarTodo()
         if not datosDepartamento:
             print("No hay departamentos disponibles. No se cambiar el departamento.")
@@ -489,14 +526,24 @@ def modificarEmpleado():
 def eliminarEmpleado():
     try:
         print("=== Eliminar Datos Empleado ===")
-        GestionEmpleado.mostrarTodos()
-        id = input("Ingrese el id del empleado: ").strip()
+        datos = GestionEmpleado.mostrarTodos()
+        if not datos:
+            print("No hay empleados para eliminar")
+            input("Presione enter para continuar")
+            return
+        for d in datos:
+            print(f"User_id: {d[0]} | Nombre: {d[2]}\n----------------------------")
+        id = input("\nIngrese el id del empleado: ").strip()
         while True:
             if not id.isdigit():
                 print("Run de empleado invalido")
                 id = input("Ingrese el id del empleado: ").strip()
             else:
                 break
+        if not GestionEmpleado.verificar(id):
+            print("Empleado no encontrado")
+            input("\nPresione enter para continuar")
+            return
         GestionEmpleado.eliminar(id)
         input("Presione enter para continuar")
         return
@@ -504,12 +551,707 @@ def eliminarEmpleado():
         print(e)
 
 #------------------------------------------------------------------------------------------------
+# funciones departamento
+
+def ingresarDatosDepartamento():
+    try:
+        print("=== Insertar Datos Departamento ===")
+        nombre = input("Ingrese el nombre del departamento: ").strip().capitalize()
+        while True:
+            if not nombre.isalpha():
+                print("Nombre invalido")
+                nombre = input("Ingrese el nombre del departamento: ").strip().upper()
+            else:
+                break
+        datos = GestionEmpleado.mostrarTodos()
+        if not datos:
+            print("No hay empleados para mostrar")
+            input("Presione enter para continuar")
+            return
+        for d in datos:
+            print(f"User_id: {d[0]} | Nombre: {d[2]}\n----------------------------")
+        gerente_id = input("Ingrese el id del gerente del departamento: ").strip()
+        while True:
+            if not gerente_id.isdigit():
+                print("Id de gerente invalido")
+                gerente_id = input("Ingrese el id del gerente del departamento: ").strip()
+            elif not GestionDepartamento.verificarGerente(gerente_id):
+                print("Gerente no encontrado")
+                gerente_id = input("Ingrese el id del gerente del departamento: ").strip()
+            else:
+                break
+        descripcion = input("Ingrese la descripcion del departamento: ").strip()
+        GestionDepartamento.agregar(Departamento(nombre, gerente_id, descripcion))
+        input("Presione enter para continuar")
+        return
+    except Exception as e:
+        print(e)
+
+def mostrarDatosDepartamento():
+    try:
+        print("=== Mostrar Datos Departamentos ===")
+        datos = GestionDepartamento.mostrarTodo()
+        if not datos:
+            print("No hay departamentos para mostrar")
+            input("Presione enter para continuar")
+            return
+        for d in datos:
+            print(f"ID: {d[0]} | Nombre: {d[1]} | Gerente: {d[2]} | Descripcion: {d[3]}\n----------------------------")
+        input("Presione enter para continuar")
+        return
+    except Exception as e:
+        print(e)
+
+def modificarDatosDepartamento():
+    try:
+        print("=== Modificar Datos Departamento ===")
+        datos = GestionDepartamento.mostrarTodo()
+        if not datos:
+            print("No hay departamentos para modificar")
+            input("Presione enter para continuar")
+            return
+        for d in datos:
+            print(f"ID: {d[0]} | Nombre: {d[1]}\n----------------------------")
+        id = input("\nIngrese el id del departamento: ").strip()
+        while True:
+            if not id.isdigit():
+                print("Id de departamento invalido")
+                id = input("Ingrese el id del departamento: ").strip()
+            else:
+                break
+        if not GestionDepartamento.verificarDepartamento(id):
+            print("Departamento no encontrado")
+            input("\nPresione enter para continuar")
+            return
+        
+        d = GestionDepartamento.buscarDepartamento(id)
+
+        lst = [d[0], d[1], d[2], d[3]]
+
+        nuevo_nombre = input("Ingrese el nuevo nombre del departamento: ").strip().capitalize()
+        while True:
+            #verificamos si el nombre esta vacio
+            if not nuevo_nombre:
+                nuevo_nombre = d[1]
+            #verificamos que el nombre sea solo letras
+            elif not nuevo_nombre.isalpha():
+                print("Nombre invalido")
+                nuevo_nombre = input("Ingrese el nuevo nombre del departamento: ").strip().upper()
+            else:
+                break
+        datos = GestionEmpleado.mostrarTodos()
+        if not datos:
+            print("No hay empleados para mostrar")
+            input("Presione enter para continuar")
+            return
+        for de in datos:
+            print(f"User_id: {de[0]} | Nombre: {de[2]}\n----------------------------")
+        nuevo_gerente = input("Ingrese el nuevo id del gerente del departamento: ").strip()
+        while True:
+            if not nuevo_gerente:
+                nuevo_gerente = d[2]
+            elif not nuevo_gerente.isdigit():
+                print("Id de gerente invalido")
+                nuevo_gerente = input("Ingrese el nuevo id del gerente del departamento: ").strip()
+            elif not GestionDepartamento.verificarGerente(nuevo_gerente):
+                print("Gerente no encontrado")
+                nuevo_gerente = input("Ingrese el nuevo id del gerente del departamento: ").strip()
+            else:
+                break
+        nueva_descripcion = input("Ingrese la nueva descripcion del departamento: ").strip() or d[3]
+
+        lst[1] = nuevo_nombre
+        lst[2] = nuevo_gerente
+        lst[3] = nueva_descripcion
+
+        GestionDepartamento.editar(lst)
+        print(f"Departamento {d[1]} modificado con exito")
+        input("Presione enter para continuar")
+        return
+    except Exception as e:
+        print(e)
+
+def eliminarDatosDepartamento():
+    try:
+        print("=== Eliminar Datos Departamento ===")
+        datos = GestionDepartamento.mostrarTodo()
+        if not datos:
+            print("No hay departamentos para eliminar")
+            input("Presione enter para continuar")
+            return
+        for d in datos:
+            print(f"ID: {d[0]} | Nombre: {d[1]}\n----------------------------")
+        id = input("\nIngrese el id del departamento: ").strip()
+        while True:
+            if not id.isdigit():
+                print("Id de departamento invalido")
+                id = input("Ingrese el id del departamento: ").strip()
+            else:
+                break
+        if not GestionDepartamento.verificarDepartamento(id):
+            print("Departamento no encontrado")
+            input("\nPresione enter para continuar")
+            return
+        GestionDepartamento.eliminar(id)
+        input("Presione enter para continuar")
+        return
+    except Exception as e:
+        print(e)
+
+#------------------------------------------------------------------------------------------------
+# funciones proyecto
+
+def ingresarDatosProyecto():
+    try:
+        print("=== Ingresar Datos Proyecto ===")
+        nombre = input("Ingrese el nombre del proyecto: ").strip().capitalize()
+        while True:
+            if not nombre.isalpha():
+                print("Nombre invalido")
+                nombre = input("Ingrese el nombre del proyecto: ").strip().upper()
+            else:
+                break
+        descripcion = input("Ingrese la descripcion del proyecto: ").strip().capitalize()
+        fecha_inicio = input("Ingrese la fecha de inicio del proyecto (YYYY-MM-DD): ").strip()
+        while True:
+            if fecha_inicio == "":
+                print("Fecha de inicio invalida")
+                fecha_inicio = input("Ingrese la fecha de inicio del proyecto (YYYY-MM-DD): ").strip()
+            elif not fecha_inicio:
+                fecha_inicio = datetime.now().strftime("%Y-%m-%d")
+            elif not re.match(r'^\d{4}-\d{2}-\d{2}$', fecha_inicio):
+                print("Fecha de inicio invalida")
+                fecha_inicio = input("Ingrese la fecha de inicio del proyecto (YYYY-MM-DD): ").strip()
+            else:
+                break
+        p = Proyecto(nombre, descripcion, fecha_inicio)
+        GestionProyecto.registrar(p)
+        input("Presione enter para continuar")
+        return
+    except Exception as e:
+        print(e)
+        
+def mostrarDatosProyecto():
+    try:
+        print("=== Mostrar Datos Proyecto ===")
+        datos = GestionProyecto.mostrarTodo()
+        if not datos:
+            print("No hay proyectos para mostrar")
+            input("Presione enter para continuar")
+            return
+        for d in datos:
+            print(f"ID: {d[0]} | Nombre: {d[1]} | Descripcion: {d[2]} | Fecha inicio: {d[3]}\n----------------------------")
+        input("Presione enter para continuar")
+        return
+    except Exception as e:
+        print(e)
+
+def modificarDatosProyecto():
+    try:
+        print("=== Editar Datos Proyecto ===")
+        datos = GestionProyecto.mostrarTodo()
+        if not datos:
+            print("No hay proyectos para editar")
+            input("Presione enter para continuar")
+            return
+        for d in datos:
+            print(f"ID: {d[0]} | Nombre: {d[1]} | Descripcion: {d[2]} | Fecha inicio: {d[3]}\n----------------------------")
+        id = input("\nIngrese el id del proyecto: ").strip()
+        while True:
+            if not id.isdigit():
+                print("Id de proyecto invalido")
+                id = input("Ingrese el id del proyecto: ").strip()
+            else:
+                break
+        if not GestionProyecto.verificar(id):
+            print("Proyecto no encontrado")
+            input("\nPresione enter para continuar")
+            return
+        p = GestionProyecto.buscarProyecto(id)
+        lst = [p[0], p[1], p[2], p[3]]
+        nuevo_nombre = input("Ingrese el nuevo nombre del proyecto: ").strip().capitalize()
+        while True:
+            if not nuevo_nombre:
+                nuevo_nombre = p[1]
+            elif not nuevo_nombre.isalpha():
+                print("Nombre invalido")
+                nuevo_nombre = input("Ingrese el nuevo nombre del proyecto (Enter para mantener el mismo): ").strip().upper()
+            else:
+                break
+        nueva_descripcion = input("Ingrese la nueva descripcion del proyecto (Enter para mantener la misma): ").strip() or p[2]
+        nueva_fecha_inicio = input("Ingrese la nueva fecha de inicio del proyecto (YYYY-MM-DD) (Enter para mantener la misma): ").strip()
+        while True:
+            if not nueva_fecha_inicio:
+                nueva_fecha_inicio = p[3]
+            elif not nueva_fecha_inicio:
+                nueva_fecha_inicio = datetime.now().strftime("%Y-%m-%d")
+            elif not re.match(r'^\d{4}-\d{2}-\d{2}$', nueva_fecha_inicio):
+                print("Fecha de inicio invalida")
+                nueva_fecha_inicio = input("Ingrese la nueva fecha de inicio del proyecto (YYYY-MM-DD) (Enter para mantener la misma): ").strip()
+            else:
+                break
+
+        lst[1] = nuevo_nombre
+        lst[2] = nueva_descripcion
+        lst[3] = nueva_fecha_inicio
+
+        GestionProyecto.editar(lst)
+        input("Presione enter para continuar")
+        return
+    except Exception as e:
+        print(e)
+
+def eliminarDatosProyecto():
+    try:
+        print("=== Eliminar Datos Proyecto ===")
+        datos = GestionProyecto.mostrarTodo()
+        if not datos:
+            print("No hay proyectos para eliminar")
+            input("Presione enter para continuar")
+            return
+        for d in datos:
+            print(f"ID: {d[0]} | Nombre: {d[1]} | Descripcion: {d[2]} | Fecha inicio: {d[3]}\n----------------------------")
+        id = input("\nIngrese el id del proyecto: ").strip()
+        while True:
+            if not id.isdigit():
+                print("Id de proyecto invalido")
+                id = input("Ingrese el id del proyecto: ").strip()
+            else:
+                break
+        if not GestionProyecto.verificar(id):
+            print("Proyecto no encontrado")
+            input("\nPresione enter para continuar")
+        GestionProyecto.eliminar(id)
+        input("Presione enter para continuar")
+        return
+    except Exception as e:
+        print(e)
+
+#------------------------------------------------------------------------------------------------
+#funciones registro de tiempo
+
+def ingresarDatosTiempo():
+    try:
+        print("=== Ingresar Datos Tiempo ===")
+        empleados = GestionEmpleado.mostrarTodos()
+        if not empleados:
+            print("No hay empleados para mostrar")
+            input("Presione enter para continuar")
+            return
+        
+        print("=== Empleados Disponibles ===")
+        for d in empleados:
+            print(f"ID: {d[0]} | Nombre: {d[2]}\n----------------------------")
+        
+        while True:
+            eId = input("\nIngrese el id del empleado: ").strip()
+            if not eId.isdigit():
+                print("Id de empleado invalido")
+                eId = input("Ingrese el id del empleado: ").strip()
+            else:
+                break
+
+        eId = int(eId)
+
+        if not GestionEmpleado.verificar(eId):
+            print("Empleado no encontrado")
+            input("\nPresione enter para continuar")
+            return
+
+        os.system("clear")
+        print("=== Proyectos Disponibles ===")
+        proyecto = GestionProyecto.mostrarTodo()
+        if not proyecto:
+            print("No hay proyectos para mostrar")
+            input("Presione enter para continuar")
+            return
+        for d in proyecto:
+            print(f"ID: {d[0]} | Nombre: {d[1]} | Descripcion: {d[2]} | Fecha inicio: {d[3]}\n----------------------------")
+        
+        while True:
+            pId = input("\nIngrese el id del proyecto: ").strip()
+            if not pId.isdigit():
+                print("Id de proyecto invalido")
+                pId = input("Ingrese el id del proyecto: ").strip()
+            else:
+                break
+
+        pId = int(pId)
+
+        if not GestionProyecto.verificar(pId):
+            print("Proyecto no encontrado")
+            input("\nPresione enter para continuar")
+            return
+
+        while True:
+            fecha = input("\nIngrese la fecha del registro (YYYY-MM-DD): ").strip()
+            if not fecha:
+                fecha = datetime.now().strftime("%Y-%m-%d")
+            elif not re.match(r'^\d{4}-\d{2}-\d{2}$', fecha):
+                print("Fecha invalida")
+                fecha = input("Ingrese la fecha del registro (YYYY-MM-DD): ").strip()
+            else:
+                break
+
+        while True:
+            horas = input("\nIngrese las horas trabajadas: ").strip()
+            if not horas.isdigit():
+                print("Horas invalidas")
+                horas = input("Ingrese las horas trabajadas: ").strip()
+            else:
+                break
+
+        descripcion = input("\nIngrese la descripcion del registro: ").strip()
+
+        tiempo = RegistroTiempo(eId, pId, fecha, horas, descripcion)
+        GestionTiempo.agregar(tiempo)
+        input("Presione enter para continuar")
+        return
+    except Exception as e:
+        print(e)
+
+def mostrarDatosTiempo():
+    try:
+        print("=== Mostrar Datos Tiempo ===")
+        datos = GestionTiempo.mostrarTodo()
+        if not datos:
+            print("No hay tiempos para mostrar")
+            input("Presione enter para continuar")
+            return
+        for d in datos:
+            print(f"ID: {d[0]} | Empleado: {d[1]} | Proyecto: {d[2]} | Fecha: {d[3]} | Horas: {d[4]} | Descripcion: {d[5]}\n----------------------------")
+        input("Presione enter para continuar")
+        return
+    except Exception as e:
+        print(e)
+
+#------------------------------------------------------------------------------------------------
+#funcinoes asignacion
+
+def asignar():
+    try:
+        print("=== Asignar Empleado a Proyecto ===")
+        empleados = GestionEmpleado.mostrarTodos()
+        if not empleados:
+            print("No hay proyectos para mostrar")
+            input("Presione enter para continuar")
+            return
+        
+        print("=== Empleados Disponibles ===")
+        for d in empleados:
+            print(f"ID: {d[0]} | Nombre: {d[2]}\n----------------------------")
+        
+        while True:
+            eId = input("\nIngrese el id del empleado: ").strip()
+            if not eId.isdigit():
+                print("Id de empleado invalido")
+                eId = input("Ingrese el id del empleado: ").strip()
+            else:
+                break
+
+        eId = int(eId)
+
+        if not GestionEmpleado.verificar(eId):
+            print("Empleado no encontrado")
+            input("\nPresione enter para continuar")
+            return
+
+        proyectos = GestionProyecto.mostrarTodo()
+        if not proyectos:
+            print("No hay proyectos para mostrar")
+            input("Presione enter para continuar")
+            return
+
+        print("=== Proyectos Disponibles ===")
+        for d in proyectos:
+            print(f"ID: {d[0]} | Nombre: {d[1]} | Descripcion: {d[2]} | Fecha inicio: {d[3]}\n----------------------------")
+
+        while True:
+            pId = input("\nIngrese el id del proyecto: ").strip()
+            if not pId.isdigit():
+                print("Id de proyecto invalido")
+                pId = input("Ingrese el id del proyecto: ").strip()
+            else:
+                break
+
+        pId = int(pId)
+
+        if not GestionProyecto.verificar(pId):
+            print("Proyecto no encontrado")    
+            input("\nPresione enter para continuar")
+            return
+
+        rol = input("\nIngrese el rol del empleado (Opcional): ").strip()
+
+        Asignacion_emp.asignar(eId, pId, rol or None)
+        input("Presione enter para continuar")
+        return
+
+    except Exception as e:
+        print(e)
+
+def desasignar():
+    try:
+        print("=== Desasignar Empleado de Proyecto ===")
+        empleado = GestionEmpleado.mostrarTodos()
+        for e in empleado:
+            print(f"ID: {e[0]} | Nombre: {e[2]}\n----------------------------")
+        
+        while True:
+            eId = input("\nIngrese el id del empleado: ").strip()
+            if not eId.isdigit():
+                print("Id de empleado invalido")
+                eId = input("Ingrese el id del empleado: ").strip()
+            else:
+                break
+
+        eId = int(eId)
+
+        if not GestionEmpleado.verificar(eId):
+            print("Empleado no encontrado")
+            input("\nPresione enter para continuar")
+            return
+
+        asignaciones = Asignacion_emp.obtenerPorEmpleado(eId)
+        if not asignaciones:
+            print("Empleado no asignado a ningun proyecto")
+            input("\nPresione enter para continuar")
+            return
+        
+        proyectos = GestionProyecto.mostrarTodo()
+        proyecto_dict = {}
+
+        proyectos = GestionProyecto.mostrarTodo()
+        proyecto_dict = {}
+
+        for p in proyectos:
+            proyecto_dict[p[0]] = p[1]
+
+        print("=== Asignaciones del empleado===")
+        for r in asignaciones:
+            asign_id = r[0]
+            proyecto_id = r[2]
+            rol = r[4]
+            proyecto_nombre = proyecto_dict.get(proyecto_id, f"ID {proyecto_id}")
+            print(f"ID: {asign_id} | Proyecto: {proyecto_nombre} | Rol: {rol}\n----------------------------")
+
+        opm = input("\n¿Desea desasignar al empleado de un proyecto? (S/N): ").strip().upper()
+        if opm != "S":
+            print("Accion cancelada")
+            input("Presione enter para continuar")
+            return
+        
+        asid_input = input("\nIngrese el id de la asignacion: ").strip()
+        while True:
+            if not asid_input.isdigit():
+                print("Id de asignacion invalido")
+                asid_input = input("Ingrese el id de la asignacion: ").strip()
+            else:
+                break
+
+        asid = int(asid_input)
+
+        if not Asignacion_emp.verificar(asid):
+            print("Asignacion no encontrada")
+            input("\nPresione enter para continuar")
+            return
+            
+        Asignacion_emp.desasignar(asid)
+        input("Presione enter para continuar")
+        return
+    except Exception as e:
+        print(e)
+
+def mostrarPorEmpleado():
+    try:
+        print("=== Mostrar Asignaciones por Empleado ===")
+        empleados = GestionEmpleado.mostrarTodos()
+        if not empleados:
+            print("No hay empleados para mostrar")
+            input("Presione enter para continuar")
+            return
+        
+        for d in empleados:
+            print(f"ID: {d[0]} | Nombre: {d[2]}\n----------------------------")
+        id = input("\nIngrese el id del empleado: ").strip()
+
+        while True:
+            if not id.isdigit():
+                print("ID de empleado invalido")
+                id = input("Ingrese el id del empleado: ").strip()
+            else:
+                break
+
+        id = int(id)
+
+        if not GestionEmpleado.verificar(id):
+            print("Empleado no encontrado")
+            input("\nPresione enter para continuar")
+            return
+
+        asignaciones = Asignacion_emp.obtenerPorEmpleado(id)
+        if not asignaciones:
+            print("El empleado no tiene asignaciones")
+            input("\nPresione enter para continuar")
+            return
+        
+        proyectos = GestionProyecto.mostrarTodo()
+        proyecto_dict = {}
+
+        for p in proyectos:
+            proyecto_dict[p[0]] = p[1]
+
+        print("=== Asignaciones del empleado===")
+        for r in asignaciones:
+            asign_id = r[0]
+            proyecto_id = r[2]
+            rol = r[4]
+            proyecto_nombre = proyecto_dict.get(proyecto_id, f"ID {proyecto_id}")
+            print(f"ID: {asign_id} | Proyecto: {proyecto_nombre} | Rol: {rol}\n----------------------------")
+        input("Presione enter para continuar")
+        return
+
+    except Exception as e:
+        print(e)
+#------------------------------------------------------------------------------------------------
+#funcion Informe
+def generarInforme():
+    try:
+        os.system("clear")
+        print("==============================================")
+        print("         I N F O R M E  G E N E R A L         ")
+        print("==============================================")
+
+        print("=== Empleados ===\n")
+        empleados = GestionEmpleado.mostrarTodos()
+        if not empleados:
+            print("No hay empleados para mostrar")
+
+        empleados_dict = {}
+
+        for e in empleados:
+            empleados_dict[e[0]] = e[2]
+
+        for e in empleados:
+            correo = e[5] if len(e) > 5 else ""
+            dept = e[8] if len(e) > 8 else ""
+            print(f"  ID: {e[0]} | Nombre: {e[2]} | RUN: {e[1]} | Correo: {correo} | Dept: {dept}")
+        print("-" * 100)
+
+        print("=== Departamentos ===\n")
+
+        departamentos = GestionDepartamento.mostrarTodo()
+        if not departamentos:
+            print("No hay departamentos para mostrar")
+
+        for d in departamentos:
+            gerente_id = d[2] if len(d) > 2 else ""
+            gerente_nombre = empleados_dict.get(gerente_id, f"ID {gerente_id}")
+            empleados_en_dept = []
+
+            for e in empleados:
+                if len(e) > 8 and e[8] == d[0]:
+                    empleados_en_dept.append(e[2])
+
+            empleado_str = ""
+            primero = True
+            for nombre in empleados_en_dept:
+                if primero:
+                    empleado_str = nombre
+                    primero = False
+                else:
+                    empleado_str += ", " + nombre
+            
+            if empleado_str == "":
+                empleado_str = "No hay empleados en este departamento"
+
+            print(f"  ID: {d[0]} | Nombre: {d[1]} | Gerente: {gerente_nombre} | Empleados: {empleado_str}")
+        print("-" * 100)
+
+        print("=== Proyectos ===\n")
+
+        proyectos = GestionProyecto.mostrarTodo()
+        if not proyectos:
+            print("No hay proyectos para mostrar")
+
+        for p in proyectos:
+            dept_id = p[2] if len(p) > 2 else ""
+            emp_ids = []
+            for e in empleados:
+                asigns = Asignacion_emp.obtenerPorEmpleado(p[0])
+                for a in asigns:
+                    if a[2] == p[0]:
+                        emp_ids.append(e[0])
+
+            emp_str = ""
+            primero = True
+            for id in emp_ids:
+                if primero:
+                    emp_str = id
+                    primero = False
+                else:
+                    emp_str += ", " + id
+
+            if emp_str == "":
+                emp_str = "No hay empleados en este proyecto"
+
+            print(f"  ID: {p[0]} | Nombre: {p[1]} | Dept: {dept_id} | Empleados: {emp_str}")
+        print("-" * 100)
+
+        print("=== Registros de Tiempo ===\n")
+
+        tiempos = GestionTiempo.mostrarTodo()
+        if not tiempos:
+            print("No hay tiempos para mostrar")
+
+        for t in tiempos:
+            fecha = t[3] if len(t) > 3 else ""
+            horas = t[4] if len(t) > 4 else ""
+            empleado_nombre = empleados_dict.get(t[1], f"ID {t[1]}")
+            print(f"  ID: {t[0]} | Empleado: {empleado_nombre} | Proyecto: {t[2]} | Fecha: {fecha} | Horas: {horas} | Descripcion: {t[5]}")
+
+        input("\nPresione enter para continuar")
+    except Exception as e:
+        print(e)
 
 #------------------------------------------------------------------------------------------------
 
-#------------------------------------------------------------------------------------------------
+def main():
+    while True:
+        menuPrincipal()
+        opm = input("Ingrese una opcion: ").strip()
+        while True:
+            if not opm in ("1", "2", "3", "4", "5", "6", "7"):
+                print("Opcion invalida")
+                opm = input("Ingrese una opcion: ").strip()
+            else:
+                break
+        if opm == "1":
+            #ingreso del menu de empleados
+            menuEmpleado()
+        elif opm == "2":
+            #ingreso del menu de departamentos
+            menuDepartamento()
+        elif opm == "3":
+            #ingreso del menu de proyectos
+            menuProyecto()
+        elif opm == "4":
+            #ingreso del menu de tiempos
+            menuRegistroTiempo()
+        elif opm == "5":
+            #ingreso del menu de asignaciones
+            menuAsignacion()
+        elif opm == "6":
+            #ingreso del menu de informes
+            generarInforme()
+        elif opm == "7":
+            opm = input("Desea salir? (S/N): ").strip().upper()
+            if opm == "S":
+                print("Saliendo...")
+                time.sleep(0.8)
+                os.system("clear")
+                break
+            else:
+                continue
 
-#------------------------------------------------------------------------------------------------
-
-os.system("cls")
-modificarEmpleado()
+main()

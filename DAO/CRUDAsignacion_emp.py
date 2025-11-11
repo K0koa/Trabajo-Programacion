@@ -12,7 +12,7 @@ def asignar(empleado_id, proyecto_id, rol=None):
         params = (empleado_id, proyecto_id, rol)
         con.ejecuta_query(sql, params)
         con.commit()
-        input("\n\n Datos ingresados Satisfactoriamente")
+        print("\nDatos ingresados Satisfactoriamente")
         con.desconectar()
     except Exception as ex:
         try:
@@ -27,7 +27,7 @@ def desasignar(asignacion_id):
         sql = f"DELETE FROM asignacion_emp WHERE user_id = %s"
         con.ejecuta_query(sql, (asignacion_id,))
         con.commit()
-        input("\n\n Datos eliminados Satisfactoriamente")
+        print("\nDatos eliminados Satisfactoriamente")
         con.desconectar()
     except Exception as e:
         try:
@@ -38,10 +38,10 @@ def desasignar(asignacion_id):
 
 def obtenerPorEmpleado(empleado_id):
     try:
-        con = Conexion(host, user, password, db)
-        sql = f"SELECT * FROM asignacion_emp WHERE empleado_id = %s"
-        con.ejecuta_query(sql, (empleado_id,))
-        datos = con.cursor.fetchall()
+        con = Conexion(host,user,password,db)
+        sql = "SELECT * FROM asignacion_emp WHERE empleado_id = %s"
+        cursor = con.ejecuta_query(sql, (empleado_id,))
+        datos = cursor.fetchall()
         con.desconectar()
         return datos
     except Exception as ex:
@@ -49,5 +49,23 @@ def obtenerPorEmpleado(empleado_id):
             con.rollback()
         except Exception:
             pass
-        print("Error obtener por empleado", ex)
+        print("Error obtenerPorEmpleado:", ex)
         return []
+    
+def verificar(id):
+    try:
+        con = Conexion(host, user, password, db)
+        sql = "SELECT COUNT(*) FROM asignacion_emp WHERE USER_ID = %s"
+        cursor = con.ejecuta_query(sql, (id,))
+        datos = cursor.fetchone()
+        con.desconectar()
+        if datos[0] > 0:
+            return True
+        else:
+            return False
+    except Exception as e:
+        try:
+            con.rollback()
+        except Exception:
+            pass
+        print("Error verificar asignacion: ", e)

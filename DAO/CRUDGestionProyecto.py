@@ -3,20 +3,25 @@ from DAO.Conexion import Conexion
 host = 'localhost'
 user = 'ecosolutions'
 password = '3k0Z0iuTloNz'
-db = 'ecotech solutions'
+db = 'ecotech'
 
-def registrarProyecto(p):
+def registrar(p):
     try:
         con = Conexion(host, user, password, db)
-        sql = f"INSERT INTO proyecto SET id = {p.id}, nombre  = '{p.nombre}', descripcion  = '{p.descripcion}', FechaInicio = '{p.fechaInicio}'"
-        con.ejecuta_query(sql)
+        sql = "INSERT INTO proyecto (nombre, descripcion, fecha_inicio) VALUES (%s, %s, %s)"
+        params = (p.nombre, p.descripcion, p.fechaInicio)
+        con.ejecuta_query(sql, params)
         con.commit()
         input("\n\n Datos ingresados Satisfactoriamente")
         con.desconectar()
     except Exception as e:
-        print(e)
+        try:
+            con.rollback()
+        except Exception:
+            pass
+        print("Error registrar proyecto: ", e)
 
-def mostrarProyecto(): 
+def mostrarTodo(): 
     try:
         con = Conexion(host, user, password, db)
         sql = "SELECT * FROM proyecto"
@@ -25,20 +30,28 @@ def mostrarProyecto():
         con.desconectar()
         return datos
     except Exception as e:
-        print(e)
+        try:
+            con.rollback()
+        except Exception:
+            pass
+        print("Error mostrar proyecto: ", e)
 
-def buscarProyecto(id):
+def buscar(id):
     try:
         con = Conexion(host, user, password, db)
-        sql = f"SELECT * FROM proyecto WHERE id = {id}"
-        cursor = con.ejecuta_query(sql)
+        sql = "SELECT * FROM proyecto WHERE USER_ID = %s"
+        cursor = con.ejecuta_query(sql, (id,))
         datos = cursor.fetchone()
         con.desconectar()
         return datos
     except Exception as e:
-        print(e)
+        try:
+            con.rollback()
+        except Exception:
+            pass
+        print("Error buscar proyecto: ", e)
 
-def cosultaparcialProyecto(cant):
+def cosultaParcial(cant):
     try:
         con = Conexion(host, user, password, db)
         sql = f"SELECT * FROM proyecto"
@@ -47,36 +60,63 @@ def cosultaparcialProyecto(cant):
         con.desconectar()
         return datos
     except Exception as e:
-        con.rollback()
-        print(e)
+        try:
+            con.rollback()
+        except Exception:
+            pass
+        print("Error buscar proyecto: ", e)
 
-def modificarProyecto(p):
+def editar(p):
     try:
         con = Conexion(host, user,password,db)
-        sql = f"UPDATE proyecto SET nombre = '{p.nombre}', descripcion  = '{p.descripcion}', FechaInicio  = '{p.fechaInicio}' WHERE id = {p.id}" 
-        con.ejecuta_query(sql)
+        sql = "UPDATE proyecto SET nombre = %s, descripcion = %s, fecha_inicio = %s WHERE USER_ID = %s"
+        params = (p[1], p[2], p[3], p[0])
+        con.ejecuta_query(sql, params)
         con.commit()
-        input("\n\n Datos modificados correctamente")
+        print("\n=Datos modificados correctamente")
         con.desconectar()
     except Exception as e:
-        print(e)
+        try:
+            con.rollback()
+        except Exception:
+            pass
+        print("Error modificar proyecto: ", e)
 
-def eliminarProyecto(id):
+def eliminar(id):
     try:
         con = Conexion(host, user, password, db)
-        sql = f"DELETE FROM proyecto WHERE id = {id}"
-        con.ejecuta_query(sql)
+        sql = "DELETE FROM proyecto WHERE USER_ID = %s"
+        con.ejecuta_query(sql, (id,))
         con.commit()
-        input("\n\n Datos eliminados Satisfactoriamente")
+        print("\nDatos eliminados Satisfactoriamente")
         con.desconectar()
     except Exception as e:
-        print(e)
+        try:
+            con.rollback()
+        except Exception:
+            pass
+        print("Error eliminar proyecto: ", e)
 
-def verificarProyecto(id):
+def buscarEspecifico(id):
     try:
         con = Conexion(host, user, password, db)
-        sql = f"SELECT COUNT(*) FROM proyecto WHERE id = {id}"
-        cursor = con.ejecuta_query(sql)
+        sql = "SELECT * FROM proyecto WHERE USER_ID = %s"
+        cursor = con.ejecuta_query(sql, (id,))
+        datos = cursor.fetchone()
+        con.desconectar()
+        return datos
+    except Exception as e:
+        try:
+            con.rollback()
+        except Exception:
+            pass
+        print("Error buscar proyecto: ", e)
+
+def verificar(id):
+    try:
+        con = Conexion(host, user, password, db)
+        sql = "SELECT COUNT(*) FROM proyecto WHERE USER_ID = %s"
+        cursor = con.ejecuta_query(sql, (id,))
         datos = cursor.fetchone()
         con.desconectar()
         if datos[0] > 0:
@@ -84,4 +124,8 @@ def verificarProyecto(id):
         else:
             return False
     except Exception as e:
-        print(e)
+        try:
+            con.rollback()
+        except Exception:
+            pass
+        print("Error verificar proyecto: ", e)

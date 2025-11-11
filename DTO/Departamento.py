@@ -1,4 +1,4 @@
-class Departamento():
+class Departamento:
     def __init__(self, nombre, gerente_empleado_id = None, descripcion = None):
         self.nombre = nombre
         self.gerente_empleado_id = gerente_empleado_id

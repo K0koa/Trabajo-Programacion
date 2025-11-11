@@ -8,13 +8,19 @@ db = 'ecotech'
 def agregar(d):
     try:
         con = Conexion(host, user, password, db)
-        sql = f"INSERT INTO departamento SET id = {d.id}, nombre = '{d.nombre}', gerente = '{d.gerente}'"
-        con.ejecuta_query(sql)
+        sql = ("INSERT INTO departamento (nombre, gerente_empleado_id, descripcion) "
+               "VALUES (%s, %s, %s)")
+        params = (d.nombre, d.gerente_empleado_id, d.descripcion)
+        con.ejecuta_query(sql, params)
         con.commit()
-        input("\n\n Datos ingresados Satisfactoriamente")
+        print("\nDatos ingresados Satisfactoriamente")
         con.desconectar()
     except Exception as e:
-        print(e)
+        try:
+            con.rollback()
+        except Exception:
+            pass
+        print("Error registrar departamento: ", e)
 
 def mostrarTodo(): 
     try:
@@ -31,8 +37,8 @@ def mostrarTodo():
 def buscarDepartamento(id):
     try:
         con = Conexion(host, user, password, db)
-        sql = f"SELECT * FROM departamento WHERE id = {id}"
-        cursor = con.ejecuta_query(sql)
+        sql = f"SELECT * FROM departamento WHERE USER_ID = %s"
+        cursor = con.ejecuta_query(sql, (id,))
         datos = cursor.fetchone()
         con.desconectar()
         return datos
@@ -55,10 +61,11 @@ def cosultaparcialDepartamento(cant):
 def editar(d):
     try:
         con = Conexion(host, user, password, db)
-        sql = f"UPDATE departamento SET nombre = '{d.nombre}', gerente = '{d.gerente}' WHERE id = {d.id}"
-        con.ejecuta_query(sql)
+        sql = "UPDATE departamento SET nombre = %s, gerente_empleado_id = %s, descripcion = %s WHERE USER_ID = %s"
+        params = (d[1], d[2], d[3], d[0])
+        con.ejecuta_query(sql, params)
         con.commit()
-        input("\n\n Datos modificados Satisfactoriamente")
+        print("\nDatos modificados Satisfactoriamente")
         con.desconectar()
     except Exception as e:
         print(e)
@@ -66,10 +73,10 @@ def editar(d):
 def eliminar(id):
     try:
         con = Conexion(host, user, password, db)
-        sql = f"DELETE FROM departamento WHERE id = {id}"
-        con.ejecuta_query(sql)
+        sql = f"DELETE FROM departamento WHERE USER_ID = %s"
+        con.ejecuta_query(sql, (id,))
         con.commit()
-        input("\n\n Datos elimados Satisfactoriamente")
+        print("\nDatos elimados Satisfactoriamente")
         con.desconectar()
     except Exception as e:
         print(e)
@@ -77,8 +84,23 @@ def eliminar(id):
 def verificarDepartamento(id):
     try:
         con = Conexion(host, user, password, db)
-        sql = f"SELECT COUNT(*) FROM departamento WHERE id = {id}"
-        cursor = con.ejecuta_query(sql)
+        sql = f"SELECT COUNT(*) FROM departamento WHERE USER_ID = %s"
+        cursor = con.ejecuta_query(sql, (id,))
+        datos = cursor.fetchone()
+        con.desconectar()
+        if datos[0] > 0:
+            return True
+        else:
+            return False
+    except Exception as e:
+        con.rollback()
+        print(e)
+
+def verificarGerente(id):
+    try:
+        con = Conexion(host, user, password, db)
+        sql = "SELECT COUNT(*) FROM empleado WHERE USER_ID = %s"
+        cursor = con.ejecuta_query(sql, (id,))
         datos = cursor.fetchone()
         con.desconectar()
         if datos[0] > 0:

@@ -3,14 +3,14 @@ from DAO.Conexion import Conexion
 host = 'localhost'
 user = 'ecosolutions'
 password = '3k0Z0iuTloNz'
-db = 'ecotech solutions'
+db = 'ecotech'
 
 def agregar(r):
     try:
         con = Conexion(host, user, password, db)
-        sql = ("INSERT INTO tiempo (empleado_id, proyecto_id, fechas, horas, descripcion) "
+        sql = ("INSERT INTO tiempo (empleado_id, proyecto_id, fecha, horas, descripcion) "
                "VALUES (%s, %s, %s, %s, %s)")
-        params = (r.empleado_id, r.proyecto_id, r.fechas, r.horas, r.descripcion)
+        params = (r.empleado_id, r.proyecto_id, r.fecha, r.horas, r.descripcion)
         con.ejecuta_query(sql, params)
         con.commit()
         input("\n\n Datos ingresados Satisfactoriamente")

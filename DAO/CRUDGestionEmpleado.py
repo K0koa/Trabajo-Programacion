@@ -13,7 +13,7 @@ def agregar(e):
         params = (e.run, e.nombre, e.direccion, e.telefono, e.correo, e.fecha_inicio, e.salario, e.departamento_id)
         con.ejecuta_query(sql, params)
         con.commit()
-        input("\n\n Datos ingresados Satisfactoriamente")
+        print("\nDatos ingresados Satisfactoriamente")
         con.desconectar()
     except Exception as e:
         try:
@@ -69,15 +69,14 @@ def cosultaParcial(cant):
             pass
         print("Error mostrar empleado:", e)
 
-
 def editar(e):
     try:
         con = Conexion(host, user,password,db)
         sql = "UPDATE empleado SET nombre = %s, direccion = %s, telefono = %s, correo = %s, fecha_inicio = %s, salario = %s, departamento_id = %s WHERE USER_ID = %s"
-        params = (e.nombre, e.direccion, e.telefono, e.correo, e.fecha_inicio, e.salario, e.departamento_id, e.user_id)
+        params = (e[2], e[3], e[4], e[5], e[6], e[7], e[8], e[0])
         con.ejecuta_query(sql, params)
         con.commit()
-        input("\n\n Datos modificados correctamente")
+        print("\nDatos modificados correctamente")
         con.desconectar()
     except Exception as e:
         try:
@@ -93,7 +92,7 @@ def eliminar(id):
         params = (id,)
         con.ejecuta_query(sql, params)
         con.commit()
-        input("\n\n empleado Eliminado Satisfactoriamente ")
+        print("\nEmpleado Eliminado Satisfactoriamente ")
         con.desconectar()
     except Exception as e:
         try:
@@ -105,7 +104,7 @@ def eliminar(id):
 def verificar(id):
     try:
         con = Conexion(host, user, password, db)
-        sql = "SELECT * FROM empleado WHERE id = %s"
+        sql = "SELECT * FROM empleado WHERE USER_ID = %s"
         cursor = con.ejecuta_query(sql, (id,))
         datos = cursor.fetchone()
         con.desconectar()

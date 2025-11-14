@@ -37,20 +37,11 @@ class Conexion:
             self.db.rollback()
         except Exception:
             pass
-    
+
     def obtenerUsuario(self, username):
         try:
-            sql = f"SELECT * FROM usuarios WHERE username = {username}"
-            cursor = self.ejecuta_query(sql)
-            datos = cursor.fetchall()
-            return datos
-        except Exception as e:
-            self.db.rollback()
-    
-    def obtenerUsuario(self, username):
-        try:
-            sql = f"SELECT FROM usuarios WHERE username = {username}"
-            cursor = self.ejecuta_query(sql)
+            sql = f"SELECT * FROM usuarios WHERE username = %s"
+            cursor = self.ejecuta_query(sql, (username,))
             datos = cursor.fetchall()
             return datos
         except Exception as e:
@@ -59,8 +50,7 @@ class Conexion:
     def agregaUsuario(self, username, password_hash, nombre, apellidos, email, tipo_usuario):
         try:
             sql = f"INSERT INTO usuarios (username, password_hash, nombre, apellidos, email, tipo_usuario)" \
-            f"VALUES ('{username}', '{password_hash}', '{nombre}', '{apellidos}', '{email}', '{tipo_usuario}')"
-            "VALUES ('{username}', '{password_hash}', '{nombre}', '{apellidos}', '{email}', '{tipo_usuario}')"
+                f"VALUES ('{username}', '{password_hash}', '{nombre}', '{apellidos}', '{email}', '{tipo_usuario}')"
             self.ejecuta_query(sql)
             self.commit()
             return True

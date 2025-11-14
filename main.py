@@ -3,6 +3,7 @@ import os
 from datetime import datetime
 import time
 import re
+from getpass import getpass
 
 # Carpeta DAO
 import DAO.CRUDGestionDepartamento as GestionDepartamento
@@ -16,6 +17,7 @@ from DTO.Departamento import Departamento
 from DTO.Empleado import Empleado
 from DTO.Proyecto import Proyecto
 from DTO.RegistroTiempo import RegistroTiempo
+from DTO.Usuario import Usuario
 
 # Funciones Menu
 def menuPrincipal():
@@ -143,10 +145,9 @@ def menuProyecto():
                 print("==========================================")
                 print("  1. Ingresar Datos Proyecto              ")
                 print("  2. Mostrar Datos Proyecto               ")
-                print("  3. Buscar Datos Proyecto                ")
-                print("  4. Modificar Datos Proyecto             ")
-                print("  5. Eliminar Datos Proyecto              ")
-                print("  6. Salir                                ")
+                print("  3. Modificar Datos Proyecto             ")
+                print("  4. Eliminar Datos Proyecto              ")
+                print("  5. Salir                                ")
                 print("==========================================")
                 op = input("Ingrese una opcion: ").strip()
             else:
@@ -156,12 +157,10 @@ def menuProyecto():
         elif op == '2':
             mostrarDatosProyecto()
         elif op == '3':
-            mostrarDatosProyectoEspecifico()
-        elif op == '4':
             modificarDatosProyecto()
-        elif op == '5':
+        elif op == '4':
             eliminarDatosProyecto()
-        elif op == '6':
+        elif op == '5':
             return
     except Exception as e:
         print(e)
@@ -237,6 +236,16 @@ def menuAsignacion():
             return
     except Exception as e:
         print(e)
+
+def menuUsuario():
+    os.system("clear")
+    print("==========================================")
+    print("         M E N U  U S U A R I O           ")
+    print("==========================================")
+    print("  1. Ingresar Datos Usuario               ")
+    print("  2. Mostrar Datos Usuario                ")
+    print("  3. Salir                                ")
+    print("==========================================")
 
 #------------------------------------------------------------------------------------------------
 # Funciones para el menu de Empleados
@@ -1215,43 +1224,103 @@ def generarInforme():
         print(e)
 
 #------------------------------------------------------------------------------------------------
+# funciones usuarios
+def ingresoUsuario():
+    try:
+        os.system("clear")
+        print("========================================")
+        print("      I N G R E S O  U S U A R I O      ")
+        print("========================================")
+        username = input("Username: ").strip()
+        while True:
+            clave1 = getpass("Contraseña: ").strip()
+            clave2 = getpass("Confirmar contraseña: ").strip()
+            if clave1 == clave2:
+                break
+        nombre = input("Nombre: ").strip().capitalize()
+        apellidos = input("Apellidos: ").strip().capitalize()
+        correo = input("Correo: ").strip()
+        print("========== Tipos de usuario ===========")
+        print("  1. Administrador")
+        print("  2. Usuario")
+        while True:
+            tipo = input("Ingrese el tipo de usuario: ").strip()
+            if not tipo.isdigit():
+                print("Tipo de usuario invalido")
+            elif int(tipo) < 1 or int(tipo) > 2:
+                print("Tipo de usuario invalido")
+            elif tipo == 1:
+                tipo = "Administrador"
+            elif tipo == 2:
+                tipo = "Usuario"
+            else:
+                break
+        Usuario.registrar_usuario(username, clave1, nombre, apellidos, correo, tipo)
+        print("========================================")
+    except Exception as e:
+        print(e)
 
+def login():
+    try:
+        os.system("clear")
+        print("====================================")
+        print("      L O G I N  U S U A R I O      ")
+        print("====================================")
+        username = input("Username: ").strip()
+        clave = getpass("Contraseña: ").strip()
+        exito = Usuario.login(username, clave)
+        if exito:
+            print("Login exitoso")
+            menuPrincipal()
+            op = input("Ingrese una opcion: ").strip()
+            while True:
+                if not op.isdigit():
+                    print("Opcion invalida")
+                    op = input("Ingrese una opcion: ").strip()
+                else:
+                    break
+            if op == "1":
+                menuEmpleado()
+            elif op == "2":
+                menuDepartamento()
+            elif op == "3":
+                menuProyecto()
+            elif op == "4":
+                menuRegistroTiempo()
+            elif op == "5":
+                menuAsignacion
+            elif op == "6":
+                generarInforme()
+            elif op == "7":
+                return
+
+        else:
+            print("Login fallido")
+        print("====================================") 
+    except Exception as e:
+        print(e)
+
+#------------------------------------------------------------------------------------------------
 def main():
     while True:
-        menuPrincipal()
-        opm = input("Ingrese una opcion: ").strip()
-        while True:
-            if not opm in ("1", "2", "3", "4", "5", "6", "7"):
-                print("Opcion invalida")
-                opm = input("Ingrese una opcion: ").strip()
-            else:
-                break
-        if opm == "1":
-            #ingreso del menu de empleados
-            menuEmpleado()
-        elif opm == "2":
-            #ingreso del menu de departamentos
-            menuDepartamento()
-        elif opm == "3":
-            #ingreso del menu de proyectos
-            menuProyecto()
-        elif opm == "4":
-            #ingreso del menu de tiempos
-            menuRegistroTiempo()
-        elif opm == "5":
-            #ingreso del menu de asignaciones
-            menuAsignacion()
-        elif opm == "6":
-            #ingreso del menu de informes
-            generarInforme()
-        elif opm == "7":
-            opm = input("Desea salir? (S/N): ").strip().upper()
-            if opm == "S":
-                print("Saliendo...")
-                time.sleep(0.8)
-                os.system("clear")
-                break
-            else:
-                continue
-
+        try:
+            menuUsuario()
+            opu = input("Ingrese una opcion: ").strip()
+            while True:
+                if not opu in ("1", "2", "3"):
+                    print("Opcion invalida")
+                    opu = input("Ingrese una opcion: ").strip()
+                else:
+                    break
+            if opu == "1":
+                login()
+            elif opu == "2":
+                ingresoUsuario()
+            elif opu == "3":
+                opu = input("Desea salir? (S/N): ").strip().upper()
+                if opu == "S":
+                    break
+        except Exception as e:
+            print(e)
+        
 main()

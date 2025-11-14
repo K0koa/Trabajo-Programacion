@@ -3,8 +3,8 @@ import bcrypt
 
 host = 'localhost'
 user = 'ecosolutions'
-password = '3k0Z0iuTloNz'
-db = 'ecotech solutions'
+passwordss = '3k0Z0iuTloNz'
+db = 'ecotech'
 
 class Usuario:
     def __init__(self, username, password_hash, nombre, apellidos, email, tipo_usuario):
@@ -17,7 +17,7 @@ class Usuario:
 
     @staticmethod
     def login(username, password):
-        con = Conexion(host, user, password, db)
+        con = Conexion(host, user, passwordss, db)
         datos = con.obtenerUsuario(username)
         if datos and len(datos) == 1:
             datos = datos[0]
@@ -47,11 +47,11 @@ class Usuario:
             tipo_usuario=tipo_usuario
         )
 
-        con = Conexion(host, user, password, db)
+        con = Conexion(host, user, passwordss, db)
         con.error = None
         exito = con.agregaUsuario(
             username=nuevo_usuario.username,
-            password_hash=nuevo_usuario.password_hash_decode('utf-8'),
+            password_hash=nuevo_usuario.password_hash.decode('utf-8'),
             nombre=nuevo_usuario.nombre,
             apellidos=nuevo_usuario.apellidos,
             email=nuevo_usuario.email,

@@ -1371,6 +1371,7 @@ def ingresoUsuario():
                 break
         Usuario.registrar_usuario(username, clave1, nombre, apellidos, correo, tipo)
         print("========================================")
+        input("Presione enter para continuar...")
     except Exception as e:
         print(e)
 

@@ -1312,13 +1312,48 @@ def ingresoUsuario():
         print("========================================")
         username = input("Username: ").strip()
         while True:
-            clave1 = getpass("Contraseña: ").strip()
-            clave2 = getpass("Confirmar contraseña: ").strip()
+            while True:
+                clave1 = getpass("Contraseña: ").strip()
+                if len(clave1) < 8 or len(clave1) > 16:
+                    print("La contraseña debe tener entre 8 y 16 caracteres.")
+                elif not re.search("[A-Z]", clave1):
+                    print("La contraseña debe contener al menos una letra mayúscula.")
+                elif not re.search("[a-z]", clave1):
+                    print("La contraseña debe contener al menos una letra minúscula.")
+                elif not re.search("[0-9]", clave1):
+                    print("La contraseña debe contener al menos un número.")
+                elif not re.search("[!@#$%^&*()_+]", clave1):
+                    print("La contraseña debe contener al menos un carácter especial.")
+                else:
+                    break
+            while True:
+                clave2 = getpass("Confirmar contraseña: ").strip()
+                if clave2 != clave1:
+                    print("Las contraseñas no coinciden. Por favor, ingrese la contraseña nuevamente.")
+                else:
+                    break
             if clave1 == clave2:
                 break
-        nombre = input("Nombre: ").strip().capitalize()
-        apellidos = input("Apellidos: ").strip().capitalize()
-        correo = input("Correo: ").strip()
+
+        while True:
+            nombre = input("Nombre: ").strip().capitalize()
+            if not nombre.isalpha():
+                print("El nombre debe contener solo letras.")
+            else:
+                break
+        while True:
+            apellidos = input("Apellidos: ").strip().capitalize()
+            if not apellidos.isalpha():
+                print("Los apellidos deben contener solo letras.")
+            else:
+                break
+        while True:
+            correo = input("Correo: ").strip()
+            if not "@" in correo or not "." in correo:
+                print("El correo debe ser contener un @ y un punto.")
+            else:
+                break
+
         print("========== Tipos de usuario ===========")
         print("  1. Administrador")
         print("  2. Usuario")

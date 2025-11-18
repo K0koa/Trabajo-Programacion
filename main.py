@@ -1,8 +1,9 @@
 # Importar sistema 
 import os
 from datetime import datetime
-import time
 import re
+from getpass import getpass
+import json, requests
 
 # Carpeta DAO
 import DAO.CRUDGestionDepartamento as GestionDepartamento
@@ -10,27 +11,38 @@ import DAO.CRUDGestionEmpleado as GestionEmpleado
 import DAO.CRUDGestionProyecto as GestionProyecto
 import DAO.CRUDGestionTiempo as GestionTiempo
 import DAO.CRUDAsignacion_emp as Asignacion_emp
+import DAO.CRUDUsuario as GestionUsuario
+import DAO.CRUDIndicador as GestionIndicador
 
 # Carpeta DTO
 from DTO.Departamento import Departamento
 from DTO.Empleado import Empleado
 from DTO.Proyecto import Proyecto
 from DTO.RegistroTiempo import RegistroTiempo
+from DTO.Usuario import Usuario
+from DTO.IndicadorEconomico import IndicadorEconomico
 
 # Funciones Menu
-def menuPrincipal():
+def menuPrincipal(tipo_usuario):
     os.system("clear")
     print("==========================================")
     print("        M E N U  P R I N C I P A L        ")
     print("==========================================")
-    print("  1. Gestionar Empleado                   ")
-    print("  2. Gestionar Departamento               ")
-    print("  3. Gestionar Proyecto                   ")
-    print("  4. Registro de Tiempo                   ")
-    print("  5. Asignacion de Empleados a Proyectos  ")
-    print("  6. Generar Informe                      ")
-    print("  7. Salir                                ")
-    print("==========================================")
+    if tipo_usuario == "Administrador":
+        print("  1. Gestionar Empleado                   ")
+        print("  2. Gestionar Departamento               ")
+        print("  3. Gestionar Proyecto                   ")
+        print("  4. Registro de Tiempo                   ")
+        print("  5. Asignacion de Empleados a Proyectos  ")
+        print("  6. Indicador Economico                  ")
+        print("  7. Generar Informe                      ")
+        print("  8. Salir                                ")
+        print("==========================================")
+    else:
+        print("  1. Idicador Economico                   ")
+        print("  2. Registro tiempo                      ")
+        print("  3. Salir                                ")
+        print("==========================================")
 
 def menuEmpleado():
     try:
@@ -143,10 +155,9 @@ def menuProyecto():
                 print("==========================================")
                 print("  1. Ingresar Datos Proyecto              ")
                 print("  2. Mostrar Datos Proyecto               ")
-                print("  3. Buscar Datos Proyecto                ")
-                print("  4. Modificar Datos Proyecto             ")
-                print("  5. Eliminar Datos Proyecto              ")
-                print("  6. Salir                                ")
+                print("  3. Modificar Datos Proyecto             ")
+                print("  4. Eliminar Datos Proyecto              ")
+                print("  5. Salir                                ")
                 print("==========================================")
                 op = input("Ingrese una opcion: ").strip()
             else:
@@ -156,12 +167,10 @@ def menuProyecto():
         elif op == '2':
             mostrarDatosProyecto()
         elif op == '3':
-            mostrarDatosProyectoEspecifico()
-        elif op == '4':
             modificarDatosProyecto()
-        elif op == '5':
+        elif op == '4':
             eliminarDatosProyecto()
-        elif op == '6':
+        elif op == '5':
             return
     except Exception as e:
         print(e)
@@ -238,6 +247,75 @@ def menuAsignacion():
     except Exception as e:
         print(e)
 
+def menuUsuario():
+    os.system("clear")
+    print("==========================================")
+    print("         M E N U  U S U A R I O           ")
+    print("==========================================")
+    print("  1. Ingresar Usuario                     ")
+    print("  2. Iniciar sesion                       ")
+    print("  3. Salir                                ")
+    print("==========================================")
+
+def menuIndicador(tipo_usuario):
+    os.system("clear")
+    print("==========================================")
+    print("       M E N U  I N D I C A D O R         ")
+    print("==========================================")
+    if tipo_usuario == "Administrador":
+        print("  1. Indicador Economico                  ")
+        print("  2. Mostrar Indicadores                  ")
+        print("  3. Eliminar Indicador                   ")
+        print("  4. Salir                                ")
+        print("==========================================")
+        opm = input("Ingrese una opcion: ").strip()
+        while True:
+            if opm not in ['1','2','3','4']:
+                os.system("clear")
+                print("==========================================")
+                print("       M E N U  I N D I C A D O R         ")
+                print("==========================================")
+                print("  1. Indicador Economico                  ")
+                print("  2. Mostrar Indicadores                  ")
+                print("  3. Eliminar Indicador                   ")
+                print("  4. Salir                                ")
+                print("==========================================")
+                opm = input("Ingrese una opcion: ").strip()
+            else:
+                break
+        if opm == '1':
+            consultaIndicadores()
+        elif opm == '2':
+            mostrarIndicadores()
+        elif opm == '3':
+            eliminarIndicador()
+        elif opm == '4':
+            return
+    else:
+        print("  1. Indicador Economico                  ")
+        print("  2. Mostrar Indicadores                  ")
+        print("  3. Salir                                ")
+        print("==========================================")
+        opm = input("Ingrese una opcion: ").strip()
+        while True:
+            if opm not in ['1','2','3']:
+                os.system("clear")
+                print("==========================================")
+                print("       M E N U  I N D I C A D O R         ")
+                print("==========================================")
+                print("  1. Indicador Economico                  ")
+                print("  2. Mostrar Indicadores                  ")
+                print("  3. Salir                                ")
+                print("==========================================")
+                opm = input("Ingrese una opcion: ").strip()
+            else:
+                break
+        if opm == '1':
+            consultaIndicadores()
+        elif opm == '2':
+            mostrarIndicadores()
+        elif opm == '3':
+            return
 #------------------------------------------------------------------------------------------------
 # Funciones para el menu de Empleados
 
@@ -1209,49 +1287,281 @@ def generarInforme():
             horas = t[4] if len(t) > 4 else ""
             empleado_nombre = empleados_dict.get(t[1], f"ID {t[1]}")
             print(f"  ID: {t[0]} | Empleado: {empleado_nombre} | Proyecto: {t[2]} | Fecha: {fecha} | Horas: {horas} | Descripcion: {t[5]}")
+        print("-" * 100)
+
+        print("=== Indicadores ===\n")
+        indicadores = GestionIndicador.obtenerTodos()
+        if not indicadores:
+            print("No hay indicadores para mostrar")
+
+        for i in indicadores:
+            print(f"  ID: {i[0]} | Tipo: {i[1]} | Fecha: {i[2]} | Valor: {i[3]} | Fecha Solicitada: {i[4]} | id_usuario: {i[5]} | Fuente: {i[6]}")
+        print("-" * 100)
 
         input("\nPresione enter para continuar")
     except Exception as e:
         print(e)
 
 #------------------------------------------------------------------------------------------------
-
-def main():
-    while True:
-        menuPrincipal()
-        opm = input("Ingrese una opcion: ").strip()
+# funciones usuarios
+def ingresoUsuario():
+    try:
+        os.system("clear")
+        print("========================================")
+        print("      I N G R E S O  U S U A R I O      ")
+        print("========================================")
+        username = input("Username: ").strip()
         while True:
-            if not opm in ("1", "2", "3", "4", "5", "6", "7"):
-                print("Opcion invalida")
-                opm = input("Ingrese una opcion: ").strip()
+            clave1 = getpass("Contraseña: ").strip()
+            clave2 = getpass("Confirmar contraseña: ").strip()
+            if clave1 == clave2:
+                break
+        nombre = input("Nombre: ").strip().capitalize()
+        apellidos = input("Apellidos: ").strip().capitalize()
+        correo = input("Correo: ").strip()
+        print("========== Tipos de usuario ===========")
+        print("  1. Administrador")
+        print("  2. Usuario")
+        while True:
+            tipo = input("Ingrese el tipo de usuario: ").strip()
+            if not tipo.isdigit():
+                print("Tipo de usuario invalido")
+            elif int(tipo) < 1 or int(tipo) > 2:
+                print("Tipo de usuario invalido")
+            elif tipo == 1:
+                tipo = "Administrador"
+            elif tipo == 2:
+                tipo = "Usuario"
             else:
                 break
-        if opm == "1":
-            #ingreso del menu de empleados
-            menuEmpleado()
-        elif opm == "2":
-            #ingreso del menu de departamentos
-            menuDepartamento()
-        elif opm == "3":
-            #ingreso del menu de proyectos
-            menuProyecto()
-        elif opm == "4":
-            #ingreso del menu de tiempos
-            menuRegistroTiempo()
-        elif opm == "5":
-            #ingreso del menu de asignaciones
-            menuAsignacion()
-        elif opm == "6":
-            #ingreso del menu de informes
-            generarInforme()
-        elif opm == "7":
-            opm = input("Desea salir? (S/N): ").strip().upper()
-            if opm == "S":
-                print("Saliendo...")
-                time.sleep(0.8)
-                os.system("clear")
-                break
-            else:
-                continue
+        Usuario.registrar_usuario(username, clave1, nombre, apellidos, correo, tipo)
+        print("========================================")
+    except Exception as e:
+        print(e)
 
-main()
+def login():
+    try:
+        os.system("clear")
+        print("====================================")
+        print("      L O G I N  U S U A R I O      ")
+        print("====================================")
+        global nombreUsuario
+        username = input("Username: ").strip()
+        clave = getpass("Contraseña: ").strip()
+        exito = Usuario.login(username, clave)
+        nombreUsuario = username
+        acceso = False
+        if exito:
+            print("Login exitoso")
+            acceso = True
+        else:
+            print("Login fallido")
+            acceso = False
+        print("====================================")
+        return acceso
+    except Exception as e:
+        print(e)
+#------------------------------------------------------------------------------------------------
+# funcion indicadores
+def consultaIndicadores():
+    os.system('clear')
+    print("=== Consulta Externa de Indicadores Económicos ===")
+    
+    TIPO_INDICADOR = input("Ingrese el tipo de indicador (UF, IVP, IPC, UTM, Dolar, Euro): ").strip().upper()
+    while True:
+        FECHA_CONSULTA = input("Ingrese la fecha a consultar (DD-MM-AAAA): ").strip()
+        try:
+            FECHA_CONSULTA = datetime.strptime(FECHA_CONSULTA, "%d-%m-%Y").strftime("%d-%m-%Y")
+            break
+        except ValueError:
+            print("Formato de fecha incorrecto. Debe ser DD-MM-AAAA.")
+
+    indicador_map = {
+        "UF": "uf", "IVP": "ivp", "IPC": "ipc", 
+        "UTM": "utm", "DOLAR": "dolar", "EURO": "euro"
+    }
+    
+    endpoint = indicador_map.get(TIPO_INDICADOR)
+
+    if not endpoint:
+        print("Tipo de indicador no reconocido o no soportado por la API de ejemplo.")
+        input("ENTER para continuar...")
+        return
+
+    API_URL = f"https://mindicador.cl/api/{endpoint}/{FECHA_CONSULTA}"
+
+    print(f"\nConsultando {TIPO_INDICADOR} para el {FECHA_CONSULTA}...")
+    
+    try:
+        response = requests.get(API_URL, timeout=10)
+        response.raise_for_status() 
+        
+        datos_json = response.json()
+        
+        serie = datos_json.get("serie", [])
+        
+        id_usuario_obtenido = GestionUsuario.verificarTipo(nombreUsuario)[0][0]
+
+        if serie:
+            valor = serie[0].get("valor")
+            fecha_valor = serie[0].get("fecha", "")[:10] 
+            
+            print(f"\n Valor Obtenido: {TIPO_INDICADOR} = ${valor:,.2f}")
+            print(f"   Fecha del Valor: {fecha_valor}")
+
+            almacenar = input("\n¿Desea almacenar este valor en la base de datos? (S/N): ").strip().upper()
+
+            if almacenar == 'S':
+                existente = GestionIndicador.obtenerPorFecha(fecha_valor, TIPO_INDICADOR)
+                
+                if existente:
+                    print(f"El indicador {TIPO_INDICADOR} para {fecha_valor} ya existe (ID: {existente[0]}). No se almacena.")
+                else:
+                    FECHA_CONSULTA = datetime.now().strftime('%Y-%m-%d')
+                    indicador = IndicadorEconomico(
+                    tipo_indicador = TIPO_INDICADOR,
+                    fecha_valor = fecha_valor,
+                    valor = valor,
+                    fecha_consulta = FECHA_CONSULTA,
+                    id_usuario = id_usuario_obtenido,
+                    fuente = API_URL 
+                    )
+                    GestionIndicador.agregar(indicador)
+            
+        else:
+            print(f"No se encontró el valor para {TIPO_INDICADOR} en la fecha {FECHA_CONSULTA}.")
+
+    except requests.exceptions.RequestException as e:
+        print(f"Error de conexión o API: {e}")
+    except json.JSONDecodeError:
+        print("Error al decodificar la respuesta JSON de la API.")
+    except Exception as e:
+        print(f"ERROR desconocido durante la consulta: {e}")
+
+    input("ENTER para continuar...")
+
+def mostrarIndicadores():
+    try:
+        os.system('clear')
+        print("=== Listado de Indicadores Económicos ===")
+        id_usuario = GestionUsuario.obtenerID(nombreUsuario)
+        tipo = GestionUsuario.verificarTipo(nombreUsuario)[0][6]
+        indicadores = GestionIndicador.obtenerTodos()
+        if tipo == "Administrador":
+            if not indicadores:
+                print("No hay indicadores para mostrar")
+                input("Presione enter para continuar")
+                return
+            else:
+                for i in indicadores:
+                    print(f"ID: {i[0]}")
+                    print(f"Tipo de Indicador: {i[1]}")
+                    print(f"Fecha del Valor: {i[2]}")
+                    print(f"Valor: {i[3]:,.2f}")
+                    print(f"ID Usuario: {i[5]}")
+                    print("------------------------------------")
+                input("ENTER para continuar...")
+        else:
+            if not indicadores:
+                print("No hay indicadores para mostrar")
+                input("ENTER para continuar...")
+                return
+            indicadores = GestionIndicador.obtenerPorId(id_usuario)
+            for i in indicadores:
+                print(f"ID: {i[0]}")
+                print(f"Tipo de Indicador: {i[1]}")
+                print(f"Fecha del Valor: {i[2]}")
+                print(f"Valor: {i[3]:,.2f}")
+                print(f"ID Usuario: {i[5]}")
+                print("------------------------------------")
+            input("ENTER para continuar...")
+    except Exception as e:
+        print(e)
+
+def eliminarIndicador():
+    try:
+        os.system('clear')
+        print("=== Eliminar Indicadores Económicos ===")
+        indicadores = GestionIndicador.obtenerTodos()
+        print(indicadores)
+        if not indicadores:
+            print("No hay indicadores para eliminar")
+            input("ENTER para continuar...")
+            return
+        else:
+            for i in indicadores:
+                print(f"ID: {i[0]} | Tipo de Indicador: {i[1]} | Fecha del Valor: {i[2]} | Valor: {i[3]:,.2f}")
+                print("------------------------------------")
+            try:
+                id_indicador = int(input("Ingrese el ID del indicador a eliminar: "))
+            except ValueError:
+                print("Opcion invalida")
+                input("ENTER para continuar...")
+                return
+            if id_indicador in [i[0] for i in indicadores]:
+                GestionIndicador.eliminar(id_indicador)
+                print("Indicador eliminado con exito")
+            else:
+                print("Indicador no encontrado")
+        input("ENTER para continuar...")
+    except Exception as e:
+        print(e)
+
+#------------------------------------------------------------------------------------------------
+# main
+
+if __name__ == "__main__":
+    try:
+        while True:
+            os.system("clear")
+            menuUsuario()
+            op = input("Ingrese una opcion: ").strip()
+            if op == '1':
+                ingresoUsuario()
+            elif op == '2':
+                acceso = login()
+                if acceso:
+                    dato = GestionUsuario.verificarTipo(nombreUsuario)
+                    tipo = dato[0][6]
+                    if tipo == "Administrador":
+                        while True:
+                            menuPrincipal(tipo)
+                            try:
+                                while True:
+                                    op = input("Ingrese una opcion: ").strip()
+                                    break
+                            except ValueError:
+                                print("Opcion invalida")
+                            if op == '1':
+                                menuEmpleado()
+                            elif op == '2':
+                                menuDepartamento()
+                            elif op == '3':
+                                menuProyecto()
+                            elif op == '4':
+                                menuRegistroTiempo()
+                            elif op == '5':
+                                menuAsignacion()
+                            elif op == '6':
+                                menuIndicador(tipo)
+                            elif op == '7':
+                                generarInforme()
+                            elif op == '8':
+                                print("Saliendo...")
+                                break
+                    else:
+                        while True:
+                            menuPrincipal(tipo)
+                            op = input("Ingrese una opcion: ").strip()
+                            if op == '1':
+                                menuIndicador(tipo)
+                            elif op == '2':
+                                menuRegistroTiempo()
+                            elif op == '3':
+                                print("Saliendo...")
+                                break
+            elif op == '3':
+                print("Saliendo...")
+                break
+    except Exception as e:
+        print(e)

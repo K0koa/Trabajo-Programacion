@@ -1322,7 +1322,7 @@ def ingresoUsuario():
                     print("La contraseña debe contener al menos una letra minúscula.")
                 elif not re.search("[0-9]", clave1):
                     print("La contraseña debe contener al menos un número.")
-                elif not re.search("[!@#$%^&*()_+]", clave1):
+                elif not re.search("[!@#$%^&*()_+.,]", clave1):
                     print("La contraseña debe contener al menos un carácter especial.")
                 else:
                     break
